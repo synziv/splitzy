@@ -1,13 +1,17 @@
 import { type } from "os";
-import { T_User } from "./user";
+import { IUser } from "./user";
 
 export type T_ItemProps = {
-    item : T_Item
+    item : IItem
     index: number;
     delete: (index:number)=>void;
 }
-export type T_Item={
+export type IItem={
     name: string;
     total: number;
-    user: T_User;
+    user: IUser;
+    splitMode: 'all' | number | {
+        mode: 'even' | number
+    },
+    with? : IUser[]
 }

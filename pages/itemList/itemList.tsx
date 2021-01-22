@@ -4,12 +4,15 @@ import Item from './item';
 import { Fab, List } from '@material-ui/core';
 import {Add} from '@material-ui/icons';
 import AddItemDialog from './addItemDialog';
-import { T_User } from '../../objectTypes/user';
-import { T_Item } from '../../objectTypes/item';
-import { alexis, bea, defaultItemList } from '../../fakeDb';
+import { IUser } from '../../objectTypes/user';
+import { IItem } from '../../objectTypes/item';
+import { alexis, bea, defaultItemList, generateDB, dbUsers } from '../../fakeDb';
+import TotalPrice from './totalPrice';
 
 
 export default function ItemList() {
+    generateDB();
+    console.log(dbUsers);
     const useStyles = makeStyles((theme) => ({
         root: {
             width: '100%',
@@ -18,9 +21,9 @@ export default function ItemList() {
         },
     }));
     const classes = useStyles();
-    const [itemList, setItemList] = React.useState<Array<T_Item>>([...defaultItemList]);
+    const [itemList, setItemList] = React.useState<Array<IItem>>([...defaultItemList]);
     const [open, setOpen] = React.useState(false);
-    const [users, setUsers] = React.useState<Array<T_User>>([alexis, bea])
+    const [users, setUsers] = React.useState<Array<IUser>>([alexis, bea])
     
     const generateItem = ()=>
         itemList.map((item, index) => {
@@ -60,6 +63,7 @@ export default function ItemList() {
             <List dense className={classes.root}>
                 {generateItem()}
             </List>
+            <TotalPrice itemList={itemList}/>
             <Fab color="primary" aria-label="add" onClick={addItem}>
                 <Add />
             </Fab>

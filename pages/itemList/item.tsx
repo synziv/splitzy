@@ -2,13 +2,15 @@ import React from 'react';
 import {ListItem, ListItemText, ListItemSecondaryAction, Checkbox, IconButton, ListItemAvatar, Avatar} from '@material-ui/core';
 import {T_ItemProps} from '../../objectTypes/item';
 import {Delete} from '@material-ui/icons';
-const Item = (props: T_ItemProps) => {
+import { dbUsers } from '../../fakeDb';
+const ItemForList = (props: T_ItemProps) => {
+    const user = dbUsers.find(user=>user.id == props.item.user);
     return (
         <ListItem key={props.index} button>
             <ListItemAvatar>
               <Avatar
                 alt={`Avatar color`}
-                src={`/img/${props.item.user.color}.jpg`}
+                src={`/img/${user.color}.jpg`}
               />
             </ListItemAvatar>
             <ListItemText primary={props.item.name} secondary={props.item.total} />
@@ -21,7 +23,7 @@ const Item = (props: T_ItemProps) => {
     )
 } 
 
-export default Item;
+export default ItemForList;
 
 /*<Checkbox
     edge="end"

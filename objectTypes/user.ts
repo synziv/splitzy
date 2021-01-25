@@ -59,15 +59,3 @@ export class User implements IUser {
     }
 
 }
-
-
-
-/*[bea, alexis, john]
-bea: loop sur 1 user et fait rien car cest le mm que linstance
-
-alexis: 
-    commence sur bea, pas pareil que linstance donc ajoute a alexis et ajoute linstance(alexis) a bea
-
-john:
-    commence sur bea, pas pareil que linstance donc ajoute bea a john et ajoute john a bea
-    ensuite sur alexis, pas pareil que linstance donc ajoute alexis a john et ajoute john a alexis*/

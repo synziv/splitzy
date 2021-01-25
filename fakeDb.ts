@@ -18,6 +18,8 @@ export const dbItems : IItem[]=[];
 export const alexis = new User('alexis', 'green');
 export const bea = new User('bea', 'purple');
 export const john = new User('john', 'red');
+export const sam = new User('sam', 'pink');
+
 
 //creating item
 export let banane=null;
@@ -27,46 +29,19 @@ export let saumon=null;
 
 
 export const generateDB= ()=>{
-    dbUsers.push(alexis, bea, john);
+    dbUsers.push(alexis, bea, john, sam);
 
     //add the user to the group 1
     alexis.addGroup(1);
     bea.addGroup(1);
     john.addGroup(1);
 
-    //adds items
-    banane = new Item('banane', 10, 0, 'specified', [1,2], 1);
-    //tomate = new Item('tomate', 20, 1, 0.3, [0], 1);
-    //pain = new Item('pain', 9, 2, 'specified', [1], 1);
-    //saumon = new Item('saumon', 30, 1, 'all', [], 1);
-
-    console.log(dbUsers);
+    // //adds items
+    // banane = new Item('banane', 10, 0, 'specified', [1,2], 1);
+    // tomate = new Item('tomate', 20, 1, 0.3, [0], 1);
+    // pain = new Item('pain', 9, 2, 'specified', [1], 1);
+    // saumon = new Item('saumon', 30, 1, 'all', [], 1);
+    // dbItems.push(banane, tomate, pain, saumon);
 }
-export const defaultItemList: T_Item[]= [
-    {
-        name: 'banane',
-        total : 10,
-        user: alexis,
-        splitMode: 'all'
-    },
-    {
-        name: 'tomate',
-        total : 5,
-        user: bea,
-        splitMode: {
-            mode: 'even',
-            with: [alexis]
-        }
-    },
-    {
-        name: 'kiwi',
-        total : 20,
-        user: alexis
-    },
-    {
-        name: 'oumpaloumpa',
-        total : 55,
-        user: bea
-    }
-];
+
 

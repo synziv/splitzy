@@ -1,34 +1,53 @@
-import React, {useCallback} from 'react';
+import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Item from './item';
 import { Fab, List } from '@material-ui/core';
-import {Add} from '@material-ui/icons';
+import {Add, Store} from '@material-ui/icons';
 import AddItemDialog from './addItemDialog';
 import { IUser } from '../../objectTypes/user';
-import { IItem } from '../../objectTypes/item';
-import { alexis, bea, defaultItemList, generateDB, dbUsers } from '../../fakeDb';
+import { IItem, Item } from '../../objectTypes/item';
+import { dbItems, generateDB, dbUsers } from '../../fakeDb';
 import TotalPrice from './totalPrice';
+import ItemForList from './item';
+import { useDispatch } from 'react-redux'
+import { getUsersInGroup } from '../redux/actions/user.actions';
+import { getItems } from '../redux/actions/items.actions';
 
 
-export default function ItemList() {
-    if(dbUsers.length==0)
-        generateDB();
-    console.log(dbUsers);
-    const useStyles = makeStyles((theme) => ({
-        root: {
-            width: '100%',
-            maxWidth: 360,
-            backgroundColor: theme.palette.background.paper,
-        },
-    }));
-    const classes = useStyles();
-    const [itemList, setItemList] = React.useState<Array<IItem>>([...defaultItemList]);
+const ItemList = ()=> {
+    const dispatch = useDispatch();
+    const [itemList, setItemList] = React.useState([]);
     const [open, setOpen] = React.useState(false);
-    const [users, setUsers] = React.useState<Array<IUser>>([alexis, bea])
+    //need to find only the ones from the same group
+    const [usersOfGroup, setUsersOfGroup] = React.useState([]);
+    const [splitMode, setSplitMode] = React.useState("all");
     
+    const fetchUsersInGroup =async()=>{
+        const res = await fetch('/api/user');
+        res.json()
+            .then(res => {
+                setUsersOfGroup(res)
+            })
+            .catch(() => {});
+    }
+    const fetchItemInGroup =async()=>{
+        const res = await fetch('/api/item');
+        res.json()
+            .then(res => {
+                setItemList(res)
+            })
+            .catch(() => {});
+    }
+
+    useEffect(() => {
+        //fetchConnectedUser();
+        //fetchUsersInGroup();
+        dispatch(getUsersInGroup());
+        dispatch(getItems());
+        console.log(itemList);
+    }, []);
     const generateItem = ()=>
         itemList.map((item, index) => {
-            return <Item item={item} index={index} delete= {deleteItem}/>
+            return <ItemForList item={item} index={index} delete= {deleteItem}/>
         })
     
       
@@ -42,7 +61,6 @@ export default function ItemList() {
         setOpen(true);
     }
     const deleteItem =(index:number)=>{
-        console.log('delete '+ index);
         let temp_itemList = [...itemList];
         temp_itemList.splice(index, 1);
         setItemList(temp_itemList);
@@ -50,21 +68,17 @@ export default function ItemList() {
     const handleClose = () => {
         setOpen(false);
     };
-    const saveItem = (name: string, total: number, user: T_User) => {
+    const saveItem = (name: string, total: number, user: number, splitMode: string | number, splitWith: number[], groupId:number ) => {
         let temp_itemList = [...itemList];
-        temp_itemList.push({
-            name: name,
-            total: total,
-            user: user
-        });
+        temp_itemList.push(new Item(name, total, user, splitMode, splitWith, groupId))
         setItemList(temp_itemList);
     }
     return (
         <div>
-            <List dense className={classes.root}>
+            {/* <List dense>
                 {generateItem()}
-            </List>
-            <TotalPrice itemList={itemList}/>
+            </List> */}
+            {/* <TotalPrice groupUsers={users}/>  */}
             <Fab color="primary" aria-label="add" onClick={addItem}>
                 <Add />
             </Fab>
@@ -73,3 +87,4 @@ export default function ItemList() {
         
     );
 }
+export default ItemList;

@@ -11,7 +11,8 @@ import TotalPrice from './totalPrice';
 
 
 export default function ItemList() {
-    generateDB();
+    if(dbUsers.length==0)
+        generateDB();
     console.log(dbUsers);
     const useStyles = makeStyles((theme) => ({
         root: {

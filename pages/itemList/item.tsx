@@ -3,8 +3,10 @@ import {ListItem, ListItemText, ListItemSecondaryAction, Checkbox, IconButton, L
 import {T_ItemProps} from '../../objectTypes/item';
 import {Delete} from '@material-ui/icons';
 import { dbUsers } from '../../fakeDb';
+import { useSelector } from 'react-redux';
+
 const ItemForList = (props: T_ItemProps) => {
-    const user = dbUsers.find(user=>user.id == props.item.user);
+    const user = useSelector(state=>state.userInGroup.values[props.item.user]);
     return (
         <ListItem key={props.index} button>
             <ListItemAvatar>

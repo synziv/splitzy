@@ -8,18 +8,20 @@ export type T_ItemProps = {
     delete: (index:number)=>void;
 }
 export type IItem={
+    id: number;
     name: string;
     total: number;
     user: number;
     splitMode: string | number;
     splitWith: number[];
-    groupdId: number;
+    groupId: number;
 }
 export class Item implements IItem{
+    id=-1
     name='';
     total=0;
     splitMode = "all";
-    groupdId=null;
+    groupId=null;
     user= null;
     splitWith: number[];
 
@@ -28,8 +30,8 @@ export class Item implements IItem{
         this.total = total;
         this.user = user;
         this.splitMode= splitmode;
-        this.groupdId = groupId;
-        this.splitWith = splitWith.length==0 ? dbGroups.find(group => group.id == this.groupdId).usersIds:splitWith;
+        this.groupId = groupId;
+        this.splitWith = splitWith.length==0 ? dbGroups.find(group => group.id == this.groupId).usersIds:splitWith;
         this.splitTotal();
 
     }
@@ -43,8 +45,6 @@ export class Item implements IItem{
                 //if the user in question is not the buyer of the item
                 //then find in his owingArr the user who bought the item and add a debt associated with him
                 if(userId!=this.user){
-                    console.log('************');
-                    console.log(groupCount);
                     dbUsers.find(user=>user.id == userId).
                     owingArr.find(x=> x.user==this.user).
                         owing+=this.total/groupCount;
@@ -74,7 +74,4 @@ export class Item implements IItem{
         } 
              
     }
-    calculateDebt(){
-
-    } 
 }

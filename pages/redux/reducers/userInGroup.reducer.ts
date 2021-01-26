@@ -34,7 +34,7 @@ export const userInGroup = (state: UserInGroupState[] = defaultState, action: an
 
         case userConstants.GET_USERS_IN_GROUP_SUCCESS:{
             return {
-                ...action.payload,
+                values:[...action.payload],
                 requestState: 'success'
             };
         }

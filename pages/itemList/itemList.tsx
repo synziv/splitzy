@@ -8,47 +8,23 @@ import { IItem, Item } from '../../objectTypes/item';
 import { dbItems, generateDB, dbUsers } from '../../fakeDb';
 import TotalPrice from './totalPrice';
 import ItemForList from './item';
-import { useDispatch } from 'react-redux'
+import { useDispatch, connect, useSelector } from 'react-redux'
 import { getUsersInGroup } from '../redux/actions/user.actions';
 import { getItems } from '../redux/actions/items.actions';
 
-
 const ItemList = ()=> {
     const dispatch = useDispatch();
-    const [itemList, setItemList] = React.useState([]);
+    const itemList = useSelector(state=>state.items.values);
     const [open, setOpen] = React.useState(false);
-    //need to find only the ones from the same group
-    const [usersOfGroup, setUsersOfGroup] = React.useState([]);
-    const [splitMode, setSplitMode] = React.useState("all");
     
-    const fetchUsersInGroup =async()=>{
-        const res = await fetch('/api/user');
-        res.json()
-            .then(res => {
-                setUsersOfGroup(res)
-            })
-            .catch(() => {});
-    }
-    const fetchItemInGroup =async()=>{
-        const res = await fetch('/api/item');
-        res.json()
-            .then(res => {
-                setItemList(res)
-            })
-            .catch(() => {});
-    }
-
     useEffect(() => {
-        //fetchConnectedUser();
-        //fetchUsersInGroup();
         dispatch(getUsersInGroup());
         dispatch(getItems());
-        console.log(itemList);
     }, []);
     const generateItem = ()=>
-        itemList.map((item, index) => {
+    itemList.map((item, index) => {
             return <ItemForList item={item} index={index} delete= {deleteItem}/>
-        })
+    })
     
       
     //CRUD item methods
@@ -75,10 +51,10 @@ const ItemList = ()=> {
     }
     return (
         <div>
-            {/* <List dense>
+            <List dense>
                 {generateItem()}
-            </List> */}
-            {/* <TotalPrice groupUsers={users}/>  */}
+            </List>
+            <TotalPrice />
             <Fab color="primary" aria-label="add" onClick={addItem}>
                 <Add />
             </Fab>

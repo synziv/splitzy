@@ -9,7 +9,7 @@ export type IItem={
     groupdId: number;
 }
 export interface ItemsState {
-    items: IItem[];
+    values: IItem[];
     requestState: string;
 }
 
@@ -25,7 +25,7 @@ export const items = (state: ItemsState[] = defaultState, action: any) => {
 
         case itemsConstants.GET_ITEMS_SUCCESS:{
             return {
-                ...action.payload,
+                values: [...action.payload],
                 requestState: 'success'
             };
         }

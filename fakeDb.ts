@@ -1,4 +1,4 @@
-import { IItem, Item, T_Item } from "./objectTypes/item";
+import { IItem } from "./objectTypes/item";
 import { IUser, IGroup, User } from "./objectTypes/user";
 
 //simple array containing all groups created

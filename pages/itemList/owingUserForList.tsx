@@ -1,6 +1,5 @@
 import React from 'react';
 import {ListItem, ListItemText, ListItemAvatar, Avatar} from '@material-ui/core';
-import { dbUsers } from '../../fakeDb';
 import { IUser } from '../../objectTypes/user';
 
 export type T_OwingUserForListProps = {

@@ -2,7 +2,6 @@ import React from 'react';
 import {ListItem, ListItemText, ListItemSecondaryAction, Checkbox, IconButton, ListItemAvatar, Avatar} from '@material-ui/core';
 import {T_ItemProps} from '../../objectTypes/item';
 import {Delete} from '@material-ui/icons';
-import { dbUsers } from '../../fakeDb';
 import { useSelector, useDispatch } from 'react-redux';
 import { deleteItem } from '../redux/actions/items.actions';
 

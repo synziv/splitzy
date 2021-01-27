@@ -1,5 +1,5 @@
-import { T_Item } from "./item";
+import { IItem } from "./item";
 
 export type T_TotalPriceProps = {
-    itemList: T_Item[];
+    itemList: IItem[];
 }

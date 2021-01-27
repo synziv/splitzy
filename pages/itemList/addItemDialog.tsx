@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect } from 'react';
+import React, { ChangeEvent } from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -7,10 +7,9 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { T_AddItemDialogProps } from '../../objectTypes/addItemDialogProps';
-import { alexis, dbGroups, dbUsers } from '../../fakeDb';
 import { Select, List } from '@material-ui/core';
 import UserForList from './userForList';
-import { addItem, getItems } from '../redux/actions/items.actions';
+import { addItem } from '../redux/actions/items.actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { State } from '../redux/reducers';
 import { IUser } from '../../objectTypes/user';

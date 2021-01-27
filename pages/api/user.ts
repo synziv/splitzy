@@ -1,6 +1,4 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { IItem } from '../../objectTypes/item';
-import { dbItems } from './item';
 import { IUser } from '../../objectTypes/user';
 
 export const dbUsers: IUser[] = [

@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import { Provider } from 'react-redux'
-import store from './redux/store/index'
+import store from '../redux/store/index'
 import 'fontsource-roboto';
 import ItemList from './itemList/itemList'
 export default function Home() {

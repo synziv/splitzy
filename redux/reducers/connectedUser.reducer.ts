@@ -5,7 +5,7 @@ export interface IConnectedUserState {
     requestState: string;
 }
 
-const defaultState: IConnectedUserState ={
+export const defaultConnectedUserState: IConnectedUserState ={
     value: {
         id: '-MS3Vc-PX4CZzmfVi9hO',
         name: 'Alexis',
@@ -18,7 +18,7 @@ const defaultState: IConnectedUserState ={
     requestState: 'success'
 }
 
-export const connectedUser = (state: IConnectedUserState = defaultState, action: any) => { 
+export const connectedUser = (state: IConnectedUserState = defaultConnectedUserState, action: any) => { 
     switch (action.type) {
         default:
             return { ...state };

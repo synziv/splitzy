@@ -5,8 +5,8 @@ import AddItemDialog from './addItemDialog';
 import TotalPrice from './totalPrice';
 import ItemForList from './item';
 import { useDispatch, useSelector } from 'react-redux'
-import { getUsersInGroup } from '../redux/actions/user.actions';
-import { getItems } from '../redux/actions/items.actions';
+import { getUsersInGroup } from '../../redux/actions/user.actions';
+import { getItems } from '../../redux/actions/items.actions';
 
 const ItemList = ()=> {
     const dispatch = useDispatch();

@@ -1,5 +1,5 @@
 import { itemsConstants } from "../constants/items.constants";
-import { IItem } from "../../../objectTypes/item";
+import { IItem } from "../../objectTypes/item";
 import { useDispatch } from 'react-redux'
 import { getUsersInGroup } from "./user.actions";
 const axios = require('axios').default;

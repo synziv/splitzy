@@ -3,7 +3,7 @@ import {ListItem, ListItemText, ListItemSecondaryAction, Checkbox, IconButton, L
 import {T_ItemProps} from '../../objectTypes/item';
 import {Delete} from '@material-ui/icons';
 import { useSelector, useDispatch } from 'react-redux';
-import { deleteItem } from '../redux/actions/items.actions';
+import { deleteItem } from '../../redux/actions/items.actions';
 
 
 const ItemForList = (props: T_ItemProps) => {

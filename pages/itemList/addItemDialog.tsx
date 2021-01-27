@@ -9,9 +9,9 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import { T_AddItemDialogProps } from '../../objectTypes/addItemDialogProps';
 import { Select, List } from '@material-ui/core';
 import UserForList from './userForList';
-import { addItem } from '../redux/actions/items.actions';
+import { addItem } from '../../redux/actions/items.actions';
 import { useDispatch, useSelector } from 'react-redux';
-import { State } from '../redux/reducers';
+import { State } from '../../redux/reducers';
 import { IUser } from '../../objectTypes/user';
 
 export default function AddItemDialog(props: T_AddItemDialogProps) {

@@ -16,6 +16,7 @@ import { IUser } from '../../objectTypes/user';
 
 export default function AddItemDialog(props: T_AddItemDialogProps) {
   const usersInGroup: IUser[] = useSelector((state: State) =>state.userInGroup.values);
+  const connectedUser: IUser = useSelector((state:State)=> state.connectedUser.value);
   const dispatch = useDispatch();
   const [name, setName] = React.useState('');
   const [total, setTotal] = React.useState(0);
@@ -24,11 +25,11 @@ export default function AddItemDialog(props: T_AddItemDialogProps) {
   const [splitWith, setsplitWith] = React.useState([]);
 
 
-  const generateSplitWith =(): number[]=>{
-    let nextSplitWith:number[]=[];
+  const generateSplitWith =(): string[]=>{
+    let nextSplitWith:string[]=[];
       usersInGroup.forEach(user=> {
         //modifier pour connected user
-        if(user.id!= 0)
+        if(user.id!= connectedUser.id)
           nextSplitWith.push(user.id)
       });
     return nextSplitWith;
@@ -73,7 +74,7 @@ export default function AddItemDialog(props: T_AddItemDialogProps) {
   //changer avec connected user
   const generateUserInGroup = () =>
       usersInGroup.map((user, index) => {
-        if(user.id!=0){
+        if(user.id!=connectedUser.id){
           let checked = splitWith.includes(user.id) ? true : false;
           return <UserForList user={user} index={index} checked={checked} handleToggle={handleToggleUser} />
         }

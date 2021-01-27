@@ -1,10 +1,12 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { IUser } from '../../objectTypes/user';
+import { database } from '../../utils/firebase';
 
 export const dbUsers: IUser[] = [
   {
     id: 0,
     name: 'Alexis',
+    email: 'alexis@email.com',
     total: 0,
     color: 'green',
     owingArr: [
@@ -22,6 +24,7 @@ export const dbUsers: IUser[] = [
   {
     id: 1,
     name: 'Beatrice',
+    email: 'bea@email.com',
     total: 0,
     color: 'purple',
     owingArr: [
@@ -39,6 +42,7 @@ export const dbUsers: IUser[] = [
   {
     id: 2,
     name: 'John',
+    email: 'john@email.com',
     total: 0,
     color: 'red',
     owingArr: [
@@ -61,10 +65,28 @@ const resetOwingArr =(userInGroup: IUser[])=>{
     user.owingArr.forEach(x=> x.owing =0);
   });
 }
+const fetchUsersInGroup = async (groupId: string)=>{
+  let usersInGroup =[];
+  //await database.ref('/users/').orderByChild('groups').equalTo('value').then((snapshot)=>snapshot.val().users);
+  const usersIds = await database.ref('/groups/'+ groupId).once('value').then((snapshot)=>snapshot.val().users);
+  for (const userId of usersIds){
+    await database.ref('/users/'+ userId).once('value').then((snapshot)=>{
+      usersInGroup.push({...snapshot.val(), id: userId});
+    });
+  }
+  return usersInGroup;
+}
+  
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
-  let userInGroup = dbUsers.filter(group=>group.groups.includes(1));
-  res.statusCode = 200
-    res.setHeader('Content-Type', 'application/json')
-    res.end(JSON.stringify(userInGroup))
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  switch(req.method){
+    case 'GET':{
+      let userInGroup = await fetchUsersInGroup('-MS3W5LMXAwk9nqRl0Dc');
+      res.statusCode = 200
+      res.setHeader('Content-Type', 'application/json')
+      res.end(JSON.stringify(userInGroup))
+      break;
+    }
+  }
+  
 }

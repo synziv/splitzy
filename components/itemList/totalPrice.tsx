@@ -3,7 +3,7 @@ import OwingUserForList from './owingUserForList';
 import { List } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 
-const generateUserInGroup = (connectedUser: number) =>{
+const generateUserInGroup = (connectedUser: string) =>{
     const userInGroup = useSelector(state=>state.userInGroup.values);
     if(userInGroup && userInGroup.length > 0){
         const connectedUserTemp = userInGroup.find(user=>user.id == connectedUser);
@@ -22,9 +22,9 @@ const TotalPrice = () => {
     return (
         <List dense>
             <h1>Alexis</h1>
-            {generateUserInGroup(0)}
+            {generateUserInGroup('-MS3VYXs7TTA5oSadrcA')}
             <h1>Beatrice</h1>
-            {generateUserInGroup(1)}
+            {generateUserInGroup('-MS3Vc-PX4CZzmfVi9hO')}
         </List>
     )
 } 

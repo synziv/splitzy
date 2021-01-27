@@ -3,31 +3,30 @@ import { bea, dbGroups, dbUsers, john } from "../fakeDb";
 import { isUndefined } from "util";
 
 export interface IUser {
-    id: number
+    id: string
     name: string;
+    email: string;
     total: number;
     color: string;
-    owingArr?: {user: number, owing:number}[];
-    groups: number[]
+    owingArr?: {user: string, owing:number}[];
+    groups: string[]
 }
 export interface IGroup {
     id: number;
     usersIds: number[];
 }
-let userId =0;
 export class User implements IUser {
     id=null;
     name= '';
+    email = '';
     total= 0;
     color= '';
     owingArr= [];
     groups=[];
-    constructor(name:string, color:string){
+    constructor(name:string, color:string, userId){
         this.id = userId;
         this.name = name;
         this.color = color;
-
-        userId++;
     }
     addGroup = (groupId)=>{
         //add the group to the user array of groups he joined
@@ -35,7 +34,7 @@ export class User implements IUser {
 
         //add the user id to the users array in the group he joined
         dbGroups.find(group=>group.id == groupId).usersIds.push(this.id)
-        
+
         //call the generateOwingArr function to update the owing array of every user in the group
         this.generateOwingArr(groupId);
     }

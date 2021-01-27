@@ -79,7 +79,7 @@ export default function AddItemDialog(props: T_AddItemDialogProps) {
           return <UserForList user={user} index={index} checked={checked} handleToggle={handleToggleUser} />
         }
     });
-  const handleToggleUser = (userId: number) => {
+  const handleToggleUser = (userId: string) => {
     let temp = splitWith;
     if (splitWith.includes(userId)) {
       const index = splitWith.findIndex(exceptUserId => exceptUserId == userId);

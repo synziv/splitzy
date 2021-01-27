@@ -1,7 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next"
 import { IItem, Item } from "./entity/item";
 import { database } from "../../utils/firebase";
-import { dbUsers } from "./user";
 import {toArray} from 'lodash';
 
 export let dbItems: IItem[] = [
@@ -105,14 +104,9 @@ export let dbItems: IItem[] = [
         //search in the db the user associated with the userId iterated from the group
           //if the user in question is not the buyer of the item
           //then find in his owingArr the user who bought the item and add a debt associated with him
-        console.log('all')
-        //console.log(usersInGroup);
-        //console.log(item);
         for(const userId of item.splitWith){
           if (userId != item.user) {
             let tempUser = await database.ref('/users/'+ userId).once('value').then((snapshot)=>snapshot.val());
-            console.log(tempUser.owingArr);
-            //let owingArr = usersInGroup.find(user => user.id == userId).
             const tempOwing = tempUser.owingArr.find(x => x.user == item.user);
             if (mode == 'add')
               tempOwing.owing += item.total / groupCount;
@@ -151,10 +145,10 @@ export let dbItems: IItem[] = [
     usersInGroup
   }
   const deleteItem=(id:number)=>{
-    const index = dbItems.findIndex(item=> item.id == id);
+    /*const index = dbItems.findIndex(item=> item.id == id);
     const deletedItem = dbItems.find(item=> item.id == id);
     dbItems.splice(index, 1);
-    splitTotal(deletedItem, 'delete');
+    splitTotal(deletedItem, 'delete');*/
   }
   const fetchItems =async (groupId: string)=>{
     let items =null;

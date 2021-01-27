@@ -64,7 +64,7 @@ export const addItem =(item: IItem) =>{
             });
     }
 }
-export const deleteItem =(id: number) =>{
+export const deleteItem =(id: string) =>{
     const request = () => ({ type: itemsConstants.DELETE_ITEM_REQUEST });
 
     const success = (data: any) => {

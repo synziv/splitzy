@@ -14,7 +14,6 @@ const ItemForList = (props: T_ItemProps) => {
     const handleDeleteItem =()=>{
         dispatch(deleteItem(props.item.id));
     }
-    console.log(user);
     if(user)
         return (
             <ListItem key={props.index} button>

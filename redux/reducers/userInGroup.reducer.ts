@@ -1,7 +1,7 @@
 import { userConstants } from "../constants/user.constants";
 
 export interface UserInGroup {
-    id: number
+    id: string
     name: string;
     total: number;
     color: string;

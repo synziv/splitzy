@@ -1,5 +1,5 @@
 import { type } from "os";
-import { bea, dbGroups, dbUsers, john } from "../fakeDb";
+import { dbGroups, dbUsers } from "../fakeDb";
 import { isUndefined } from "util";
 
 export interface IUser {
@@ -36,25 +36,25 @@ export class User implements IUser {
         dbGroups.find(group=>group.id == groupId).usersIds.push(this.id)
 
         //call the generateOwingArr function to update the owing array of every user in the group
-        this.generateOwingArr(groupId);
+        //this.generateOwingArr(groupId);
     }
-    generateOwingArr = (groupId: number)=>{
-        //find the group with the id
-        const usersGroup = dbGroups.find(group => group.id == groupId);
-        //populate the owing array
-        usersGroup.usersIds.forEach(userId =>{
-            //adds every user to owingArr of the instance user
-            if(userId != this.id ){
-                this.owingArr.push({
-                    user: userId,
-                    owing: 0
-                });
-                dbUsers.find(user => user.id == userId).owingArr.push({
-                    user: this.id,
-                    owing:0
-                });
-            }
-        });
-    }
+    // generateOwingArr = (groupId: string)=>{
+    //     //find the group with the id
+    //     const usersGroup = dbGroups.find(group => group.id == groupId);
+    //     //populate the owing array
+    //     usersGroup.usersIds.forEach(userId =>{
+    //         //adds every user to owingArr of the instance user
+    //         if(userId != this.id ){
+    //             this.owingArr.push({
+    //                 user: userId,
+    //                 owing: 0
+    //             });
+    //             dbUsers.find(user => user.id == userId).owingArr.push({
+    //                 user: this.id,
+    //                 owing:0
+    //             });
+    //         }
+    //     });
+    // }
 
 }

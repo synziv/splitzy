@@ -14,6 +14,10 @@ const initialState: State = {
     items: {
       values: [],
       requestState: ''
+    },
+    connectedUser:{
+        value: null,
+        requestState: ''
     }
   };
 export interface State{

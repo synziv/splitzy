@@ -8,6 +8,6 @@ export type T_AddItemDialogProps = {
 export type T_UserForListProps={
     user: IUser;
     index:number;
-    handleToggle: (userId: number)=>void;
+    handleToggle: (userId: string)=>void;
     checked: boolean;
 }

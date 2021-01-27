@@ -33,7 +33,7 @@ export let dbItems: IItem[] = [
     splitTotal(newItem, 'add');
   }
   const splitTotal = (item: IItem, mode: string)=>{
-    const userInGroup = dbUsers.filter(user=> user.groups.includes(item.groupId));
+    const userInGroup = dbUsers.filter(user=> user.groups.includes(item.groupId)); 
     const groupCount = item.splitMode=='all' ? userInGroup.length : item.splitWith.length;
     //split evenly between memebers of the group
     switch (item.splitMode) {

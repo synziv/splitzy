@@ -5,10 +5,9 @@ import { IUser } from "./user";
 export type T_ItemProps = {
     item : IItem
     index: number;
-    delete: (index:number)=>void;
 }
 export type IItem={
-    id: number;
+    id?: number;
     name: string;
     total: number;
     user: number;

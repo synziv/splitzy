@@ -21,10 +21,13 @@ const ItemList = ()=> {
         dispatch(getUsersInGroup());
         dispatch(getItems());
     }, []);
-    const generateItem = ()=>
-    itemList.map((item, index) => {
-            return <ItemForList item={item} index={index} delete= {deleteItem}/>
-    })
+    const generateItem = () => {
+        if(itemList)
+            return itemList.map((item, index) => {
+                return <ItemForList item={item} index={index} />
+            })
+    }
+    
     
       
     //CRUD item methods

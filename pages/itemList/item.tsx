@@ -3,10 +3,17 @@ import {ListItem, ListItemText, ListItemSecondaryAction, Checkbox, IconButton, L
 import {T_ItemProps} from '../../objectTypes/item';
 import {Delete} from '@material-ui/icons';
 import { dbUsers } from '../../fakeDb';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { deleteItem } from '../redux/actions/items.actions';
+
 
 const ItemForList = (props: T_ItemProps) => {
+    const dispatch = useDispatch();
     const user = useSelector(state=>state.userInGroup.values[props.item.user]);
+
+    const handleDeleteItem =()=>{
+        dispatch(deleteItem(props.item.id));
+    }
     return (
         <ListItem key={props.index} button>
             <ListItemAvatar>
@@ -17,7 +24,7 @@ const ItemForList = (props: T_ItemProps) => {
             </ListItemAvatar>
             <ListItemText primary={props.item.name} secondary={props.item.total} />
             <ListItemSecondaryAction>
-                <IconButton aria-label="delete" onClick={()=>props.delete(props.index)}>
+                <IconButton aria-label="delete" onClick={handleDeleteItem}>
                     <Delete fontSize="small" />
                 </IconButton>
             </ListItemSecondaryAction>

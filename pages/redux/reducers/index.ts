@@ -4,10 +4,16 @@ import {userInGroup} from './userInGroup.reducer';
 import {items} from './items.reducer';
 import { ItemsState } from "./items.reducer";
 
-const initialState = {
+const initialState: State = {
     //connectedUser:{},
-    userInGroup: [],
-    items: []
+    userInGroup: {
+      values: [],
+      requestState: ''
+    },
+    items: {
+      values: [],
+      requestState: ''
+    }
   };
 export interface State{
   userInGroup: UserInGroupState;
@@ -18,7 +24,7 @@ const appReducer = combineReducers({
   items
 });
 
-  function rootReducer(state= initialState, action) {
+  function rootReducer(state:State= initialState, action) {
     return appReducer(state, action);
   };
 

@@ -33,6 +33,9 @@ export const items = (state: ItemsState[] = defaultState, action: any) => {
 
         case itemsConstants.GET_ITEMS_FAILURE:
             return { state, requestState:'failure' };
+        // case itemsConstants.ADD_ITEM_SUCCESS:
+        // case itemsConstants.ADD_ITEM_FAILURE:
+        // case itemsConstants.ADD_ITEM_REQUEST:
         default:
             return { ...state };
     }

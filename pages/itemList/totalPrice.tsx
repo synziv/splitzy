@@ -5,13 +5,14 @@ import { useSelector } from 'react-redux';
 
 const generateUserInGroup = (connectedUser: number) =>{
     const userInGroup = useSelector(state=>state.userInGroup.values);
-    const connectedUserTemp = userInGroup.find(user=>user.id == connectedUser);
-    
-    return connectedUserTemp.owingArr.map((value, index) =>{
-        const owingUser = userInGroup.find(user=> user.id == value.user);
-        const valueForChild = {user:owingUser, owing: value.owing};
-        return <OwingUserForList value={valueForChild} index={index} />
-    });
+    if(userInGroup && userInGroup.length > 0){
+        const connectedUserTemp = userInGroup.find(user=>user.id == connectedUser);
+        return connectedUserTemp.owingArr.map((value, index) =>{
+            const owingUser = userInGroup.find(user=> user.id == value.user);
+            const valueForChild = {user:owingUser, owing: value.owing};
+            return <OwingUserForList value={valueForChild} index={index} />
+        });
+    }
 }
     
     

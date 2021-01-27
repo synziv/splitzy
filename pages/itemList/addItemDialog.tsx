@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from 'react';
+import React, { ChangeEvent, useEffect } from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -10,46 +10,75 @@ import { T_AddItemDialogProps } from '../../objectTypes/addItemDialogProps';
 import { alexis, dbGroups, dbUsers } from '../../fakeDb';
 import { Select, List } from '@material-ui/core';
 import UserForList from './userForList';
+import { addItem, getItems } from '../redux/actions/items.actions';
+import { useDispatch, useSelector } from 'react-redux';
+import { State } from '../redux/reducers';
+import { IUser } from '../../objectTypes/user';
 
 export default function AddItemDialog(props: T_AddItemDialogProps) {
+  const usersInGroup: IUser[] = useSelector((state: State) =>state.userInGroup.values);
+  const dispatch = useDispatch();
+  const [name, setName] = React.useState('');
+  const [total, setTotal] = React.useState(0);
+  const [splitMode, setSplitMode] = React.useState('all');
+  const [customSplitMode, setCustomSplitMode] = React.useState('even');
+  const [splitWith, setsplitWith] = React.useState([]);
 
-const [name, setName] = React.useState('');
-const [total, setTotal] = React.useState(0);
-const [splitMode, setSplitMode] = React.useState('all');
-const [customSplitMode, setCustomSplitMode] = React.useState('even');
-const [splitWith, setsplitWith] = React.useState([]);
 
-const handleNameChange = (e: ChangeEvent<HTMLInputElement>)=>{
+  const generateSplitWith =(): number[]=>{
+    let nextSplitWith:number[]=[];
+      usersInGroup.forEach(user=> {
+        //modifier pour connected user
+        if(user.id!= 0)
+          nextSplitWith.push(user.id)
+      });
+      console.log(nextSplitWith);
+    return nextSplitWith;
+  }
+  const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
-}
-const handleTotalChange = (e: ChangeEvent<HTMLInputElement>)=>{
-    try{
-        setTotal(Number(e.target.value))
+  }
+  const handleTotalChange = (e: ChangeEvent<HTMLInputElement>) => {
+    try {
+      setTotal(Number(e.target.value))
     }
-    catch{}
-}
-const handleSplitModeChange = (e: ChangeEvent<HTMLInputElement>)=>{
+    catch{ }
+  }
+  const handleSplitModeChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSplitMode(e.target.value);
-}
-const handleCustomSplitModeChange = (e: ChangeEvent<HTMLInputElement>)=>{
-  setCustomSplitMode(e.target.value);
-}
-const close = ()=>{
+    if(e.target.value == 'all')
+      setsplitWith(generateSplitWith());
+  }
+  
+  const handleCustomSplitModeChange = (e: ChangeEvent<HTMLInputElement>) => {
+      setCustomSplitMode(e.target.value);
+  }
+  const close = () => {
     setName('');
     setTotal(0);
     props.handleClose();
   }
   const save = () => {
-    const splitModeToSave = splitMode =='all' ? splitMode : customSplitMode;
+    const splitModeToSave = splitMode == 'all' ? splitMode : customSplitMode;
+    const groupId = 1;
     //name, total, userId, splitModeToSave, splitWith,
-    props.saveItem(name, total, 0, splitModeToSave, splitWith, 1);
+    dispatch(addItem({
+      name: name,
+      total: total,
+      splitMode: splitModeToSave,
+      splitWith: splitModeToSave =='all'? generateSplitWith() : splitWith,
+      user: 0,
+      groupId: 1
+    }));
     close();
   }
+  //changer avec connected user
   const generateUserInGroup = () =>
-    dbGroups.find(group => group.id == 1).usersIds.map((userId, index) => {
-      let checked = splitWith.includes(userId) ? true : false;
-      const user = dbUsers.find(user => user.id == userId);
-      return <UserForList user={user} index={index} checked={checked} handleToggle={handleToggleUser} />
+      usersInGroup.map((user, index) => {
+        if(user.id!=0){
+          let checked = splitWith.includes(user.id) ? true : false;
+          return <UserForList user={user} index={index} checked={checked} handleToggle={handleToggleUser} />
+        }
     });
   const handleToggleUser = (userId: number) => {
     let temp = splitWith;
@@ -59,10 +88,9 @@ const close = ()=>{
     }
     else
       temp.push(userId);
-    
-      setsplitWith([...temp]);
+    setsplitWith([...temp]);
   }
-  const customChoices =()=>{
+  const customChoices = () => {
     if (splitMode != 'all') {
       return (
         <div>
@@ -75,10 +103,10 @@ const close = ()=>{
             onChange={handleCustomSplitModeChange}
           >
             <option aria-label="even" value="even">Even</option>
-            <option value="1/3">1/3</option>
-            <option value="2/3">2/3</option>
-            <option value="1/4">1/4</option>
-            <option value="3/4">3/4</option>
+            <option value={1/3}>1/3</option>
+            <option value={2/3}>2/3</option>
+            <option value={1/4}>1/4</option>
+            <option value={3/4}>3/4</option>
           </Select>
         </div>
       )

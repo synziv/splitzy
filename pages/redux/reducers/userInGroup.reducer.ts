@@ -9,7 +9,7 @@ export interface UserInGroup {
     groups: number[];
 }
 export interface UserInGroupState {
-    users: UserInGroup[];
+    values: UserInGroup[];
     requestState: string;
 }
 

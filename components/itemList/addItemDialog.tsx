@@ -66,8 +66,8 @@ export default function AddItemDialog(props: T_AddItemDialogProps) {
       total: total,
       splitMode: splitModeToSave,
       splitWith: splitModeToSave =='all'? generateSplitWith() : splitWith,
-      user: 0,
-      groupId: 1
+      user: connectedUser.id,
+      groupId: '-MS3W5LMXAwk9nqRl0Dc'
     }));
     close();
   }

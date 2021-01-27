@@ -2,62 +2,6 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { IUser } from '../../objectTypes/user';
 import { database } from '../../utils/firebase';
 
-export const dbUsers: IUser[] = [
-  {
-    id: 0,
-    name: 'Alexis',
-    email: 'alexis@email.com',
-    total: 0,
-    color: 'green',
-    owingArr: [
-      {
-        user: 1,
-        owing: 0
-      },
-      {
-        user: 2,
-        owing: 0
-      }
-    ],
-    groups: [1]
-  },
-  {
-    id: 1,
-    name: 'Beatrice',
-    email: 'bea@email.com',
-    total: 0,
-    color: 'purple',
-    owingArr: [
-      {
-        user: 0,
-        owing: 0
-      },
-      {
-        user: 2,
-        owing: 0
-      }
-    ],
-    groups: [1]
-  },
-  {
-    id: 2,
-    name: 'John',
-    email: 'john@email.com',
-    total: 0,
-    color: 'red',
-    owingArr: [
-      {
-        user: 0,
-        owing: 0
-      },
-      {
-        user: 1,
-        owing: 0
-      }
-    ],
-    groups: [1]
-  },
-]
 //make logic to only calculate if the item list has a different length
 
 const resetOwingArr =(userInGroup: IUser[])=>{

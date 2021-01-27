@@ -88,52 +88,57 @@ export let dbItems: IItem[] = [
         }
     });*/
   }
-  const addItem=(data)=>{
-    const connectedUser='-MS3VYXs7TTA5oSadrcA';
-    const newItem = new Item({...data, user: connectedUser});
+  const addItem=async (data)=>{
+    const newItem = new Item(data);
     database.ref('/items').push(newItem);
     dbItems.push(newItem);
-    //splitTotal(newItem, 'add');
+    await splitTotal(newItem, 'add');
     //database.ref('/groups/'+'-MS3W5LMXAwk9nqRl0Dc').update({users:['-MS3VYXs7TTA5oSadrcA','-MS3Vc-PX4CZzmfVi9hO']});
     //generateOwingArr('-MS3W5LMXAwk9nqRl0Dc');
   }
-  const splitTotal = (item: IItem, mode: string)=>{
-    console.log('splittotal');
-    console.log(item);
-    const userInGroup = dbUsers.filter(user=> user.groups.includes(item.groupId)); 
-    const groupCount = item.splitMode=='all' ? userInGroup.length : item.splitWith.length;
+  const splitTotal = async (item: IItem, mode: string)=>{
+    const usersInGroup =  await database.ref('/groups/'+ item.groupId).once('value').then((snapshot)=>snapshot.val().users);
+    const groupCount = item.splitMode=='all' ? usersInGroup.length : item.splitWith.length;
     //split evenly between memebers of the group
     switch (item.splitMode) {
       case 'all': {
-        item.splitWith.forEach(userId => {
-          //search in the db the user associated with the userId iterated from the group
+        //search in the db the user associated with the userId iterated from the group
           //if the user in question is not the buyer of the item
           //then find in his owingArr the user who bought the item and add a debt associated with him
+        console.log('all')
+        //console.log(usersInGroup);
+        //console.log(item);
+        for(const userId of item.splitWith){
           if (userId != item.user) {
-            let owingArr = userInGroup.find(user => user.id == userId).
-              owingArr.find(x => x.user == item.user);
+            let tempUser = await database.ref('/users/'+ userId).once('value').then((snapshot)=>snapshot.val());
+            console.log(tempUser.owingArr);
+            //let owingArr = usersInGroup.find(user => user.id == userId).
+            const tempOwing = tempUser.owingArr.find(x => x.user == item.user);
             if (mode == 'add')
-              owingArr.owing += item.total / groupCount;
+              tempOwing.owing += item.total / groupCount;
             else
-              owingArr.owing -= item.total / groupCount;
+              tempOwing.owing -= item.total / groupCount;
+            await database.ref('/users/'+userId).update({owingArr:tempUser.owingArr});
           }
-        })
+        }
+          
         break;
       }
       case 'even': {
-        item.splitWith.forEach(userId => {
+        for(const userId of item.splitWith){
           //search in the db the user associated with the userId iterated from the group
           //if the user in question is not the buyer of the item
           //then find in his owingArr the user who bought the item and add a debt associated with him
-          userInGroup.find(user => user.id == userId).
-            owingArr.find(x => x.user == item.user).
-            owing += item.total / (groupCount + 1);
+          let owingArr = usersInGroup.find(user => user.id == userId).
+            owingArr.find(x => x.user == item.user);
+          owingArr.owing += item.total / (groupCount + 1);
 
-        });
+          await database.ref('/users/'+userId).update({owingArr:owingArr});
+        };
         break;
       }
       default:{
-        const owingArr = userInGroup.find(user=>user.id == item.splitWith[0]).
+        const owingArr = usersInGroup.find(user=>user.id == item.splitWith[0]).
               owingArr.find(x=> x.user==item.user);
         if(mode =='add')
               owingArr.owing+=(item.total * Number(item.splitMode))/groupCount;
@@ -142,6 +147,8 @@ export let dbItems: IItem[] = [
         break;
       }
     }
+    //update users
+    usersInGroup
   }
   const deleteItem=(id:number)=>{
     const index = dbItems.findIndex(item=> item.id == id);
@@ -159,7 +166,7 @@ export let dbItems: IItem[] = [
   export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     switch(req.method){
       case 'POST':{
-        addItem(req.body);
+        await addItem(req.body);
         res.statusCode = 200;
         res.end();
         break;

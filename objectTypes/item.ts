@@ -7,16 +7,16 @@ export type T_ItemProps = {
     index: number;
 }
 export type IItem={
-    id?: number;
+    id?: string;
     name: string;
     total: number;
-    user: number;
+    user: string;
     splitMode: string | number;
     splitWith: number[];
-    groupId: number;
+    groupId: string;
 }
 export class Item implements IItem{
-    id=-1
+    id='';
     name='';
     total=0;
     splitMode = "all";

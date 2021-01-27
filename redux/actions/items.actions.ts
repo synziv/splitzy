@@ -65,7 +65,6 @@ export const addItem =(item: IItem) =>{
     }
 }
 export const deleteItem =(id: number) =>{
-    console.log('delete biiiitch');
     const request = () => ({ type: itemsConstants.DELETE_ITEM_REQUEST });
 
     const success = (data: any) => {
@@ -87,7 +86,6 @@ export const deleteItem =(id: number) =>{
         dispatch(request());
         return await axios.delete(requestURL, id)
             .then(res => {
-                console.log('delete success');
                 dispatch(success(res));
                 dispatch(getUsersInGroup());
                 dispatch(getItems());

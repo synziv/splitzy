@@ -79,12 +79,10 @@ export let dbItems: IItem[] = [
   const deleteItem=(id:number)=>{
     const index = dbItems.findIndex(item=> item.id == id);
     const deletedItem = dbItems.find(item=> item.id == id);
-    console.log(deletedItem);
     dbItems.splice(index, 1);
     splitTotal(deletedItem, 'delete');
   }
   export default function handler(req: NextApiRequest, res: NextApiResponse) {
-    console.log(req.method);
     switch(req.method){
       case 'POST':{
         addItem(req.body);
@@ -99,7 +97,6 @@ export let dbItems: IItem[] = [
         break;
       }
       case 'DELETE':{
-        console.log('delete');
         deleteItem(req.body); 
         res.statusCode = 200;
         res.end();

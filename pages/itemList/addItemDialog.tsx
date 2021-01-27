@@ -31,7 +31,6 @@ export default function AddItemDialog(props: T_AddItemDialogProps) {
         if(user.id!= 0)
           nextSplitWith.push(user.id)
       });
-      console.log(nextSplitWith);
     return nextSplitWith;
   }
   const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {

@@ -22,9 +22,9 @@ const TotalPrice = () => {
     return (
         <List dense>
             <h1>Alexis</h1>
-            {generateUserInGroup('-MS3VYXs7TTA5oSadrcA')}
-            <h1>Beatrice</h1>
             {generateUserInGroup('-MS3Vc-PX4CZzmfVi9hO')}
+            <h1>Beatrice</h1>
+            {generateUserInGroup('-MS3VYXs7TTA5oSadrcA')}
         </List>
     )
 } 

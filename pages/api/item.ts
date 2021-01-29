@@ -90,7 +90,6 @@ export let dbItems: IItem[] = [
   const addItem=async (data)=>{
     const newItem = new Item(data);
     database.ref('/items').push(newItem);
-    dbItems.push(newItem);
     await splitTotal(newItem, 'add');
     //database.ref('/groups/'+'-MS3W5LMXAwk9nqRl0Dc').update({users:['-MS3VYXs7TTA5oSadrcA','-MS3Vc-PX4CZzmfVi9hO']});
     //generateOwingArr('-MS3W5LMXAwk9nqRl0Dc');
@@ -132,28 +131,42 @@ export let dbItems: IItem[] = [
         break;
       }
       default:{
-        const owingArr = usersInGroup.find(user=>user.id == item.splitWith[0]).
-              owingArr.find(x=> x.user==item.user);
-        if(mode =='add')
-              owingArr.owing+=(item.total * Number(item.splitMode))/groupCount;
-        else
-          owingArr.owing-=(item.total * Number(item.splitMode))/groupCount;
+        for(const userId of item.splitWith) {
+          if (userId != item.user) {
+            let tempUser = await database.ref('/users/'+ userId).once('value').then((snapshot)=>snapshot.val());
+            const tempOwing = tempUser.owingArr.find(x => x.user == item.user);
+            if (mode == 'add')
+              tempOwing.owing += (item.total * Number(item.splitMode)) / groupCount;
+            else
+              tempOwing.owing -= (item.total * Number(item.splitMode)) / groupCount;
+            
+              await database.ref('/users/'+userId).update({owingArr:tempUser.owingArr});
+          }
+        }
         break;
       }
     }
     //update users
     usersInGroup
   }
-  const deleteItem=(id:number)=>{
-    /*const index = dbItems.findIndex(item=> item.id == id);
-    const deletedItem = dbItems.find(item=> item.id == id);
-    dbItems.splice(index, 1);
-    splitTotal(deletedItem, 'delete');*/
+  const deleteItem=async (id:string)=>{
+    const deletedItem = await database.ref('/items/'+id).once('value').then((snapshot)=>snapshot.val());
+    splitTotal(deletedItem, 'delete');
+    await database.ref('/items/'+id).set(null);
   }
   const fetchItems =async (groupId: string)=>{
-    let items =null;
+    let items =[]; 
     await database.ref('/items/').orderByChild('groupId').equalTo(groupId).on('value', (snapshot)=>{
-      items = [...toArray(snapshot.val())];
+      if (snapshot.val()) {
+        const keys = toArray(Object.keys(snapshot.val()));
+        items = [...toArray(snapshot.val())];
+        items = items.map((item, index) => {
+          return {
+            ...item,
+            id: keys[index]
+          }
+        })
+      }
     });
     return items
   }
@@ -173,7 +186,9 @@ export let dbItems: IItem[] = [
         break;
       }
       case 'DELETE':{
-        deleteItem(req.body); 
+        console.log('delete req')
+        console.log(req.body);
+        await deleteItem(req.body.id); 
         res.statusCode = 200;
         res.end();
         break;

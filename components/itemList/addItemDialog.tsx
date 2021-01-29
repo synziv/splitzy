@@ -27,6 +27,7 @@ export default function AddItemDialog(props: T_AddItemDialogProps) {
 
   const generateSplitWith =(): string[]=>{
     let nextSplitWith:string[]=[];
+    console.log(connectedUser);
       usersInGroup.forEach(user=> {
         //modifier pour connected user
         if(user.id!= connectedUser.id)

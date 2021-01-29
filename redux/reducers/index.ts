@@ -2,7 +2,7 @@ import { UserInGroupState } from "./userInGroup.reducer";
 import { combineReducers } from 'redux';
 import {userInGroup} from './userInGroup.reducer';
 import {items} from './items.reducer';
-import {connectedUser, IConnectedUserState} from './connectedUser.reducer';
+import {connectedUser, defaultConnectedUserState, IConnectedUserState} from './connectedUser.reducer';
 import { ItemsState } from "./items.reducer";
 
 const initialState: State = {
@@ -15,10 +15,7 @@ const initialState: State = {
       values: [],
       requestState: ''
     },
-    connectedUser:{
-        value: null,
-        requestState: ''
-    }
+    connectedUser:{...defaultConnectedUserState}
   };
 export interface State{
   userInGroup: UserInGroupState;

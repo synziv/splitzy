@@ -84,7 +84,6 @@ export const deleteItem =(id: string) =>{
 
     return async (dispatch: any) => {
         dispatch(request());
-        console.log(id.toString());
         return await axios({
             method: 'delete',
             url: requestURL,

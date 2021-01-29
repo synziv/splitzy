@@ -7,6 +7,7 @@ import ItemForList from './item';
 import { useDispatch, useSelector } from 'react-redux'
 import { getUsersInGroup } from '../../redux/actions/user.actions';
 import { getItems } from '../../redux/actions/items.actions';
+import { login } from '../../redux/actions/auth.actions';
 
 const ItemList = ()=> {
     const dispatch = useDispatch();

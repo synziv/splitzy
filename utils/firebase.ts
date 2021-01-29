@@ -18,4 +18,5 @@ const firebaseConfig = {
 console.log('firebase init');
 if(!firebase.apps.length)
     firebase.initializeApp(firebaseConfig);
+export const firebaseInstance = firebase;
 export const database = firebase.database();

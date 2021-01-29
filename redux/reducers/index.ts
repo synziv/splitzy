@@ -6,7 +6,10 @@ import {connectedUser, defaultConnectedUserState, IConnectedUserState} from './c
 import { ItemsState } from "./items.reducer";
 
 const initialState: State = {
-    //connectedUser:{},
+    connectedUser:{
+      value: {},
+      requestState: ''
+    },
     userInGroup: {
       values: [],
       requestState: ''
@@ -15,7 +18,6 @@ const initialState: State = {
       values: [],
       requestState: ''
     },
-    connectedUser:{...defaultConnectedUserState}
   };
 export interface State{
   userInGroup: UserInGroupState;

@@ -9,32 +9,24 @@ const Login = () => {
     const dispatch = useDispatch();
     const provider = new firebaseInstance.auth.FacebookAuthProvider();
     const facebookAuth = () => {
-        firebaseInstance.auth().signInWithPopup(provider).then((result)=>{
-            console.log(result.credential);
-            dispatch(login(result.credential));
-        });
-        // firebaseInstance.auth()
-        //         .getRedirectResult()
-        //         .then((result) => {
-        //             if (result.credential) {
-        //                 dispatch(login(result.credential));
-                        
-        //                 var user = result.user;
-        //                 console.log(user);
-        //             }
-        //             // The signed-in user info.
+        firebaseInstance.auth().signInWithPopup(provider);
+        firebaseInstance.auth()
+                .getRedirectResult()
+                .then((result) => {
+                    if (result.credential)
+                        dispatch(login(result.credential));
                     
-        //         }).catch((error) => {
-        //             // Handle Errors here.
-        //             var errorCode = error.code;
-        //             var errorMessage = error.message;
-        //             // The email of the user's account used.
-        //             var email = error.email;
-        //             // The firebase.auth.AuthCredential type that was used.
-        //             var credential = error.credential;
-        //             // ...
-        //             console.log(errorCode)
-        //         });
+                }).catch((error) => {
+                    // Handle Errors here.
+                    var errorCode = error.code;
+                    var errorMessage = error.message;
+                    // The email of the user's account used.
+                    var email = error.email;
+                    // The firebase.auth.AuthCredential type that was used.
+                    var credential = error.credential;
+                    // ...
+                    console.log(errorCode)
+                });
     }
     return (
         <Button

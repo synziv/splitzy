@@ -24,34 +24,36 @@ const firebaseConfig = {
 };
 if(!firebase.apps.length)
     firebase.initializeApp(firebaseConfig);
-export function AuthProvider({ children }: any) {
-  // const [user, setUser] = useState<firebase.User | null>(null);
+function AuthProvider({ children }: any) {
+   const [user, setUser] = useState<firebase.User | null>(null);
 
-  // useEffect(() => {
-  //   return firebase.auth().onIdTokenChanged(async (user) => {
-  //     if (!user) {
-  //       setUser(null);
-  //       nookies.set(undefined, 'token', '');
-  //     } else {
-  //       const token = await user.getIdToken();
-  //       setUser(user);
-  //       nookies.set(undefined, 'token', token);
-  //     }
-  //   });
-  // }, []);
+   useEffect(() => {
+     return firebase.auth().onIdTokenChanged(async (user) => {
+       if (!user) {
+         setUser(null);
+         nookies.set(undefined, 'token', '');
+       } else {
+         const token = await user.getIdToken();
+         setUser(user);
+         nookies.set(undefined, 'token', token);
+       }
+     });
+   }, []);
 
-  // // force refresh the token every 10 minutes
-  // useEffect(() => {
-  //   const handle = setInterval(async () => {
-  //     const user = firebase.auth().currentUser;
-  //     if (user) await user.getIdToken(true);
-  //   }, 10 * 60 * 1000);
+   // force refresh the token every 10 minutes
+   useEffect(() => {
+     const handle = setInterval(async () => {
+       const user = firebase.auth().currentUser;
+       if (user) await user.getIdToken(true);
+     }, 10 * 60 * 1000);
 
-  //   // clean up setInterval
-  //   return () => clearInterval(handle);
-  // }, []);
+     // clean up setInterval
+     return () => clearInterval(handle);
+   }, []);
 
-  // return (
-  //   <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>
-  // );
+   return (
+     <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>
+   );
 }
+
+export default AuthProvider;

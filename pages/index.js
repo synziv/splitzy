@@ -6,7 +6,8 @@ import 'fontsource-roboto';
 import ItemList from '../components/itemList/itemList'
 import Login from '../pages/auth/login';
 import AuthProvider from '../components/auth/authProvider';
-export default function Home() {
+import Home from './home';
+export default function Index() {
   return (
     <AuthProvider>
       <Provider store={store}>
@@ -17,8 +18,7 @@ export default function Home() {
           </Head>
 
           <main>
-            <ItemList />
-            <Login />
+            <Home/>
           </main>
 
 

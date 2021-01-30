@@ -9,8 +9,10 @@ const Login = () => {
     const dispatch = useDispatch();
     const provider = new firebaseInstance.auth.FacebookAuthProvider();
     const facebookAuth = () => {
-        firebaseInstance.auth().signInWithPopup(provider);
-        firebaseInstance.auth()
+        firebaseInstance.auth().signInWithRedirect(provider);
+        
+    }
+    firebaseInstance.auth()
                 .getRedirectResult()
                 .then((result) => {
                     if (result.credential)
@@ -27,7 +29,6 @@ const Login = () => {
                     // ...
                     console.log(errorCode)
                 });
-    }
     return (
         <Button
             variant="contained"

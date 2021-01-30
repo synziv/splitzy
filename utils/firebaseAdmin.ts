@@ -1,18 +1,8 @@
-// import * as firebaseAdmin from 'firebase-admin';
+export const admin = require("firebase-admin");
 
-// // get this JSON from the Firebase board
-// // you can also store the values in environment variables
-// import serviceAccount from './secret.json';
+var serviceAccount = require("../splitzy-4baa3-firebase-adminsdk-izqht-eaf0843347.json");
 
-// if (!firebaseAdmin.apps.length) {
-//   firebaseAdmin.initializeApp({
-//     credential: firebaseAdmin.credential.cert({
-//       privateKey: serviceAccount.private_key,
-//       clientEmail: serviceAccount.client_email,
-//       projectId: serviceAccount.project_id,
-//     }),
-//     databaseURL: 'https://YOUR_PROJECT_ID.firebaseio.com',
-//   });
-// }
-
-// export { firebaseAdmin };
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://splitzy-4baa3-default-rtdb.firebaseio.com"
+});

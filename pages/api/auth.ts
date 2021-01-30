@@ -10,7 +10,6 @@ const createUser = async (user)=>{
      email: user.email
    })
   const key = await database.ref('/users').push(newUser).key;
-  console.log('user created');
   return {...newUser, id: key};
 }
 

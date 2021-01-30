@@ -21,13 +21,13 @@ export const login = (credential)=>{
 
     return async (dispatch: any) => {
         dispatch(request());
-        const res = await fetch(requestURL);
         return await axios.get(requestURL, {
             params: {
                 credential: credential
             }
           })
           .then(res => {
+            alert('success')
             dispatch(success(res.data));
             })
             .catch((res) => {

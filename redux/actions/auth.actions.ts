@@ -27,7 +27,6 @@ export const login = (credential)=>{
             }
           })
           .then(res => {
-            alert('success')
             dispatch(success(res.data));
             })
             .catch((res) => {

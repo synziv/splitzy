@@ -34,10 +34,11 @@ export const getUsersInGroup = ()=>{
 export const getConnectedUser = (tokenId)=>{
     const request = () => ({ type: userConstants.GET_CONNECTED_USER_REQUEST });
 
-    const success = (usersInGroup: any) => {
+    const success = (res: any) => {
+        console.log(res.data);
         return{
           type: userConstants.GET_CONNECTED_USER_SUCCESS,
-          payload: usersInGroup,
+          payload: res.data,
         }
     }
     const failure = (response: any) => {
@@ -53,16 +54,16 @@ export const getConnectedUser = (tokenId)=>{
         dispatch(request());
         axios({
             method: 'get',
-            url: '/api/group',
-            data: {
+            url: requestURL,
+            params: {
               tokenId: tokenId,
               method: 'getConnectedUser'
             }
         })
-            .then(res => {
+        .then(res => {
                 dispatch(success(res));
             })
-            .catch((res) =>{ 
+        .catch((res) =>{ 
                 dispatch(failure(res))
             });
     }

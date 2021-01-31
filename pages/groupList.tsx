@@ -10,9 +10,9 @@ import { isUndefined } from 'util';
 import { NextPage, GetServerSideProps } from 'next';
 
 const GroupList =()=> {
-    const dispatch = useDispatch();
     const groupList = useSelector((state:State)=>{
-            if('groups' in state.connectedUser.value)
+            console.log(state.connectedUser);
+            if(state.connectedUser.value && 'groups' in state.connectedUser.value)
                 return (state.connectedUser.value.groups)
             else
                 return ([])

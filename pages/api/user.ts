@@ -21,10 +21,15 @@ const fetchUsersInGroup = async (groupId: string)=>{
   return usersInGroup;
 }
   
+const getConnectedUser = async(tokenId)=>{
 
+  //const appUser = await database.ref('/users').orderByChild('email').equalTo(userCookie.user.email).once('value').then((snapshot)=>snapshot.val());
+                //console.log(appUser);
+}
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   switch(req.method){
     case 'GET':{
+      console.log(req.body);
       let userInGroup = await fetchUsersInGroup('-MS3W5LMXAwk9nqRl0Dc');
       res.statusCode = 200
       res.setHeader('Content-Type', 'application/json')

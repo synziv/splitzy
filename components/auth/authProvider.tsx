@@ -2,42 +2,36 @@ import { createContext, useState, useEffect, useContext } from 'react';
 import 'firebase/auth';
 import firebase from 'firebase/app';
 import nookies from 'nookies';
+import { State } from "../../redux/reducers";
+import { useSelector } from 'react-redux';
+import { IUser } from '../../pages/api/entity/user';
+import { IConnectedUserState } from '../../redux/reducers/connectedUser.reducer';
 
 const AuthContext = createContext<{ user: firebase.User | null }>({
   user: null,
 });
-//const firebase = require("firebase/app");
 
-// Add the Firebase products that you want to use
-require("firebase/auth");
-require("firebase/database");
-
-const firebaseConfig = {
-    apiKey: "AIzaSyDqCSteUWGiObMVDK7rB3hgoqHExkU-pCc",
-    authDomain: "splitzy-4baa3.firebaseapp.com",
-    databaseURL: "https://splitzy-4baa3-default-rtdb.firebaseio.com",
-    projectId: "splitzy-4baa3",
-    storageBucket: "splitzy-4baa3.appspot.com",
-    messagingSenderId: "815338342836",
-    appId: "1:815338342836:web:68fd8f927154bb761e0ae1",
-    measurementId: "G-X45594301P"
-};
 function AuthProvider({ children }: any) {
    const [user, setUser] = useState<firebase.User | null>(null);
+   const connectedUser: IConnectedUserState = useSelector((state:State)=> state.connectedUser);
 
-   useEffect(() => {
-     return firebase.auth().onIdTokenChanged(async (user) => {
-       console.log(user);
-       if (!user) {
-         setUser(null);
-         nookies.set(undefined, 'token', '');
-       } else {
-         const token = await user.getIdToken();
-         setUser(user);
-         nookies.set(undefined, 'token', token);
-       }
-     });
-   }, []);
+  useEffect(() => {
+    return firebase.auth().onIdTokenChanged((firebaseUser) => {
+      console.log('*************connected user');
+      console.log(connectedUser);
+      console.log('*************firebase user');
+      console.log(user);
+      if (!firebaseUser) {
+        setUser(null);
+        nookies.set(undefined, 'token', '');
+      } else {
+        firebaseUser.getIdToken().then((token)=>{
+          setUser(firebaseUser);
+          nookies.set(undefined, 'token', token);
+        });
+      }
+    });
+  }, []);
 
    // force refresh the token every 10 minutes
    useEffect(() => {

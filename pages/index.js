@@ -9,8 +9,8 @@ import AuthProvider from '../components/auth/authProvider';
 import Home from './home';
 export default function Index() {
   return (
-    <AuthProvider>
-      <Provider store={store}>
+    <Provider store={store}>
+      <AuthProvider>
         <div className="container">
           <Head>
             <title>Create Next App</title>
@@ -18,13 +18,13 @@ export default function Index() {
           </Head>
 
           <main>
-            <Home/>
+            <Home />
           </main>
 
 
         </div>
-      </Provider>
-    </AuthProvider>
+      </AuthProvider>
+    </Provider>
 
     
   )

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, Props } from 'react';
 import { Fab, List, Button } from '@material-ui/core';
 import {Add} from '@material-ui/icons';
 import { useDispatch, useSelector } from 'react-redux'
@@ -7,14 +7,15 @@ import nookies from 'nookies';
 import { State } from '../redux/reducers';
 import AddGroupDialog from './addGroupDialog';
 import { isUndefined } from 'util';
+import { NextPage, GetServerSideProps } from 'next';
 
-const GroupList = ()=> {
+const GroupList =()=> {
     const dispatch = useDispatch();
     const groupList = useSelector((state:State)=>{
-        if(state.connectedUser.value.groups === undefined)
-            return (state.connectedUser.value.groups)
-        else
-            return ([])
+            if('groups' in state.connectedUser.value)
+                return (state.connectedUser.value.groups)
+            else
+                return ([])
     });
     //const groupsObj = useDispatch();
     const [open, setOpen] = React.useState(false);

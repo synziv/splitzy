@@ -2,6 +2,7 @@ import { IItem } from "../../objectTypes/item";
 import { useDispatch } from 'react-redux'
 import { getUsersInGroup } from "./user.actions";
 import { groupsConstants } from "../constants/group.constants";
+import { userConstants } from "../constants/user.constants";
 const axios = require('axios').default;
 
 export const addGroup =(group) =>{
@@ -33,8 +34,11 @@ export const addGroup =(group) =>{
             }
         })
         .then(res => {
-            console.log('success')
             dispatch(success(res));
+            dispatch({
+                type: userConstants.GET_CONNECTED_USER_SUCCESS,
+                payload: res.data,
+            })
         })
         .catch((res) =>{ 
             dispatch(failure(res))

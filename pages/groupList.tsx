@@ -8,10 +8,10 @@ import { State } from '../redux/reducers';
 import AddGroupDialog from './addGroupDialog';
 import { isUndefined } from 'util';
 import { NextPage, GetServerSideProps } from 'next';
+import GroupForList from './group';
 
 const GroupList =()=> {
     const groupList = useSelector((state:State)=>{
-            console.log(state.connectedUser);
             if(state.connectedUser.value && 'groups' in state.connectedUser.value)
                 return (state.connectedUser.value.groups)
             else
@@ -19,22 +19,14 @@ const GroupList =()=> {
     });
     //const groupsObj = useDispatch();
     const [open, setOpen] = React.useState(false);
-    
+    console.log(groupList)
     const generateGroup = () => {
-        //if(groupList)
-            /*return itemList.map((item, index) => {
-                return <ItemForList item={item} index={index} />
-            })*/
+        if(groupList)
+            return groupList.map((group, index) => {
+                return <GroupForList group={group} index={index} />
+            })
     }
     
-    
-      
-    //CRUD item methods
-    /*add an item : 
-        - change state to open dialog window
-        - save recorded input if all is good
-        - close dialog otherwise
-    */
     const addGroup = ()=>{
         setOpen(true);
     }
@@ -43,9 +35,9 @@ const GroupList =()=> {
     };
     return (
         <div>
-            {/* <List dense>
+            <List dense>
                 {generateGroup()}
-            </List> */}
+            </List> 
             <Fab color="primary" aria-label="add" onClick={addGroup}>
                 <Add />
             </Fab>

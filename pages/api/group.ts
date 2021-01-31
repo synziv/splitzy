@@ -24,12 +24,19 @@ const createGroup= async(data)=>{
     console.log(data);
     const key = database.ref('/groups').push({
         name: data.name,
-        users: [data.userId]
+        users: [data.user]
     }).key;
-    let user =await database.ref('/users/'+data.userId).once('value').then((snapshot)=> snapshot.val());
+    let user =await database.ref('/users/'+data.user).once('value').then((snapshot)=> snapshot.val());
     console.log(user);
-    //database.ref('/groups/'+'-MS3W5LMXAwk9nqRl0Dc').update({users:['-MS3VYXs7TTA5oSadrcA','-MS3Vc-PX4CZzmfVi9hO']});
+    //console.log(user.groups);
+    if(user.groups !=null)
+      user.groups.push(key);
+    else
+      user.groups =[key];
+
+    await database.ref('/users/'+data.userId).update({groups:user.groups});
     //generateOwingArr('-MS3W5LMXAwk9nqRl0Dc');
+    return user;
   }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -42,11 +49,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       break;
     }
     case 'POST':{
-        //console.log(req.body)
-        //await createGroup(req.query);
+        const user = await createGroup(req.body);
         res.statusCode = 200
         res.setHeader('Content-Type', 'application/json')
-        res.end(JSON.stringify(''))
+        res.end(JSON.stringify(user));
         break;
       }
   }

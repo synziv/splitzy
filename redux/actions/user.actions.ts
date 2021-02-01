@@ -1,4 +1,5 @@
 import { userConstants } from "../constants/user.constants";
+import { firebaseInstance } from "../../utils/firebase";
 const axios = require('axios').default;
 
 export const getUsersInGroup = ()=>{
@@ -63,7 +64,8 @@ export const getConnectedUser = (tokenId)=>{
         .then(res => {
                 dispatch(success(res));
             })
-        .catch((res) =>{ 
+            .catch((res) => {
+                firebaseInstance.auth().signOut();
                 dispatch(failure(res))
             });
     }

@@ -27,13 +27,19 @@ const getConnectedUser = async(tokenId)=>{
   let connectedUser;
   await firebaseAdminInstance.auth()
   .verifyIdToken(tokenId)
-  .then(async (decodedToken) => {
-    connectedUser = await database.ref('/users').orderByChild('email').
-      equalTo(firebaseInstance.auth().currentUser.email).once('value').then((snapshot)=>snapshot.val());
+    .then(async (decodedToken) => {
+      //fetch user
+      connectedUser = await database.ref('/users').orderByChild('email').
+        equalTo(firebaseInstance.auth().currentUser.email).once('value').then(async (snapshot) => {
+          const user = snapshot.val();
+          user.groups =await Promise.all(user.groups.map(async (group)=> await database.ref('/groups/' + group).once('value').then((snapshot) => snapshot.val())));
+          return user
+        })
       const key = Object.keys(connectedUser)
-      connectedUser= {...toArray(connectedUser)[0], id: key[0]};
+      connectedUser = { ...toArray(connectedUser)[0], id: key[0] };
   })
   .catch((error) => {
+    console.log(error.message)
     throw 'Error for fetching user';
   });
   return connectedUser;          

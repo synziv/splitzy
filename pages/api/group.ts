@@ -21,20 +21,19 @@ const fetchUserGroups = async (userId: string)=>{
   return usersInGroup;
 }
 const createGroup= async(data)=>{
-    console.log(data);
     const key = database.ref('/groups').push({
         name: data.name,
         users: [data.user]
     }).key;
     let user =await database.ref('/users/'+data.user).once('value').then((snapshot)=> snapshot.val());
-    console.log(user);
     //console.log(user.groups);
+    console.log(user);
     if(user.groups !=null)
       user.groups.push(key);
     else
       user.groups =[key];
-
-    await database.ref('/users/'+data.userId).update({groups:user.groups});
+    console.log(user);
+    await database.ref('/users/'+data.user).update({groups:user.groups});
     //generateOwingArr('-MS3W5LMXAwk9nqRl0Dc');
     return user;
   }

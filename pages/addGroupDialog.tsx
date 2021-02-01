@@ -26,8 +26,6 @@ export default function AddGroupDialog(props: T_AddGroupDialogProps) {
     setName(e.target.value);
   }
 
-  
-
   const close = () => {
     setName('');
     props.handleClose();

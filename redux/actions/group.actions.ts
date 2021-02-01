@@ -6,7 +6,6 @@ import { userConstants } from "../constants/user.constants";
 const axios = require('axios').default;
 
 export const addGroup =(group) =>{
-    console.log(group);
     const request = () => ({ type: groupsConstants.ADD_GROUP_REQUEST });
 
     const success = (data: any) => {

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Fab, List } from '@material-ui/core';
+import { Fab, List, Button } from '@material-ui/core';
 import {Add} from '@material-ui/icons';
 import AddItemDialog from './addItemDialog';
 import TotalPrice from './totalPrice';
@@ -7,6 +7,9 @@ import ItemForList from './item';
 import { useDispatch, useSelector } from 'react-redux'
 import { getUsersInGroup } from '../../redux/actions/user.actions';
 import { getItems } from '../../redux/actions/items.actions';
+import { login } from '../../redux/actions/auth.actions';
+import { firebaseInstance } from '../../utils/firebase';
+import nookies from 'nookies';
 
 const ItemList = ()=> {
     const dispatch = useDispatch();
@@ -38,6 +41,12 @@ const ItemList = ()=> {
     const handleClose = () => {
         setOpen(false);
     };
+    const signOut = ()=>{
+        firebaseInstance.auth().signOut().then(()=>{
+            nookies.set(undefined, 'token', '');
+        });
+        console.log('byebye')
+    }
     return (
         <div>
             <List dense>
@@ -48,6 +57,7 @@ const ItemList = ()=> {
                 <Add />
             </Fab>
             <AddItemDialog open={open} handleClose={handleClose}/>
+            <Button onClick={signOut}>Sign out</Button>
         </div>
         
     );

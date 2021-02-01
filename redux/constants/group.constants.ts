@@ -1,0 +1,6 @@
+export const groupsConstants = {
+    ADD_GROUP_REQUEST: "ADD_GROUP_REQUEST",
+    ADD_GROUP_SUCCESS: "ADD_GROUP_SUCCESS",
+    ADD_GROUP_FAILURE: "ADD_GROUP_FAILURE",
+
+};

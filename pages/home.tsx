@@ -1,7 +1,5 @@
-import ItemList from "../components/itemList/itemList"
 import Login from "./auth/login"
 import { useAuth } from "../components/auth/authProvider"
-// /pages/authenticated.tsx
 import React from 'react';
 import GroupList from "./groupList";
 import { firebaseInstance } from "../utils/firebase";

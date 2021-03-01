@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.createGroup = exports.fetchUserGroups = void 0;
 const firebase_1 = require("../utils/firebase");
 // make logic to only calculate if the item list has a different length
 /*const resetOwingArr =(userInGroup: IUser[])=>{
@@ -27,6 +28,7 @@ const fetchUserGroups = (userId) => __awaiter(void 0, void 0, void 0, function* 
     }
     return usersInGroup;
 });
+exports.fetchUserGroups = fetchUserGroups;
 const createGroup = (data) => __awaiter(void 0, void 0, void 0, function* () {
     const key = firebase_1.database.ref('/groups').push({
         name: data.name,
@@ -44,18 +46,19 @@ const createGroup = (data) => __awaiter(void 0, void 0, void 0, function* () {
     // generateOwingArr('-MS3W5LMXAwk9nqRl0Dc');
     return user;
 });
+exports.createGroup = createGroup;
 function handler(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         switch (req.method) {
             case 'GET': {
-                const userInGroup = yield fetchUserGroups('-MS3W5LMXAwk9nqRl0Dc');
+                const userInGroup = yield exports.fetchUserGroups('-MS3W5LMXAwk9nqRl0Dc');
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
                 res.end(JSON.stringify(userInGroup));
                 break;
             }
             case 'POST': {
-                const user = yield createGroup(req.body);
+                const user = yield exports.createGroup(req.body);
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
                 res.end(JSON.stringify(user));

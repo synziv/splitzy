@@ -33,7 +33,8 @@ export const facebookAuth = async (req: express.Request, res: express.Response) 
         else {
           const key = Object.keys(appUser)
           user = { ...toArray(appUser)[0], id: key[0] };
-          user.groups = await Promise.all(user.groups.map(async (group: any) => await database.ref('/groups/' + group).once('value').then((snapshot) => snapshot.val())))
+          user.groups = await Promise.all(user.groups.map(async (group: any) => await database.ref('/groups/' + group).once('value')
+            .then((snapshot) => {return {...snapshot.val(), id: snapshot.key}})))
           console.log(user);
         }
       });

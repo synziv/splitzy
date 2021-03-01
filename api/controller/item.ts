@@ -69,7 +69,7 @@ export let dbItems: IItem[] = [
         }
     });
   }*/
-  const addItem=async (data:any)=>{
+  export const addItem=async (data:any)=>{
     const newItem = new Item(data);
     database.ref('/items').push(newItem);
     await splitTotal(newItem, 'add');
@@ -129,50 +129,34 @@ export let dbItems: IItem[] = [
       }
     }
   }
-  const deleteItem=async (id:string)=>{
+  export const deleteItem=async (id:string)=>{
     const deletedItem = await database.ref('/items/'+id).once('value').then((snapshot)=>snapshot.val());
     splitTotal(deletedItem, 'delete');
     await database.ref('/items/'+id).set(null);
   }
-  const fetchItems =async (groupId: string)=>{
-    let items:any[] =[];
-    await database.ref('/items/').orderByChild('groupId').equalTo(groupId).on('value', (snapshot)=>{
-      if (snapshot.val()) {
-        const keys = toArray(Object.keys(snapshot.val()));
-        items = [...toArray(snapshot.val())];
-        items = items.map((item, index) => {
-          return {
-            ...item,
-            id: keys[index]
-          }
-        })
-      }
-    });
-    return items
-  }
-  export default async function handler(req: express.Request, res: express.Response) {
-    switch(req.method){
-      case 'POST':{
-        await addItem(req.body);
-        res.statusCode = 200;
-        res.end();
-        break;
-      }
-      case 'GET':{
-        const fetchedItems = await fetchItems('-MS3W5LMXAwk9nqRl0Dc');
-        res.statusCode = 200
-        res.setHeader('Content-Type', 'application/json')
-        res.end(JSON.stringify(fetchedItems));
-        break;
-      }
-      case 'DELETE':{
-        console.log('delete req')
-        console.log(req.body);
-        await deleteItem(req.body.id);
-        res.statusCode = 200;
-        res.end();
-        break;
-      }
-    }
 
+  export const fetchItems =async (req: express.Request, res: express.Response)=>{
+    try{
+      const groupdId: string = req.query.groupId.toString();
+      let items:any[] =[];
+      await database.ref('/items/').orderByChild('groupId').equalTo(groupdId).on('value', (snapshot) => {
+        if (snapshot.val()) {
+          const keys = toArray(Object.keys(snapshot.val()));
+          items = [...toArray(snapshot.val())];
+          items = items.map((item, index) => {
+            return {
+              ...item,
+              id: keys[index]
+            };
+          });
+        }
+      });
+      console.log(items);
+      res.send(items);
+    }
+    catch(error){
+      res.status(500);
+      res.send();
+    }
+    
   }

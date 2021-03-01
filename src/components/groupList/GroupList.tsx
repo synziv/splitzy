@@ -4,9 +4,9 @@ import {Add} from '@material-ui/icons';
 import { useDispatch, useSelector } from 'react-redux'
 
 import nookies from 'nookies';
-import AddGroupDialog from './addGroupDialog';
+import AddGroupDialog from './AddGroupDialog';
 import { isUndefined } from 'util';
-import GroupForList from './group';
+import GroupForList from './Group';
 import { State } from '../../redux/reducers';
 import { IGroup } from '../../entity/group';
 

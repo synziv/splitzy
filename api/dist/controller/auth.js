@@ -28,7 +28,6 @@ const facebookAuth = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         // Sign in with the credential from the Facebook user.
         let user = null;
         const credentialJson = firebase_1.firebaseInstance.auth.AuthCredential.fromJSON(req.body.credential);
-        console.log(credentialJson);
         yield firebase_1.firebaseInstance.auth().signInWithCredential(credentialJson)
             .then((result) => __awaiter(void 0, void 0, void 0, function* () {
             // Signed in
@@ -43,11 +42,14 @@ const facebookAuth = (req, res) => __awaiter(void 0, void 0, void 0, function* (
             else {
                 const key = Object.keys(appUser);
                 user = Object.assign(Object.assign({}, lodash_1.toArray(appUser)[0]), { id: key[0] });
-                user.groups = yield Promise.all(user.groups.map((group) => __awaiter(void 0, void 0, void 0, function* () { return yield firebase_2.database.ref('/groups/' + group).once('value').then((snapshot) => snapshot.val()); })));
+                user.groups = yield Promise.all(user.groups.map((group) => __awaiter(void 0, void 0, void 0, function* () {
+                    return yield firebase_2.database.ref('/groups/' + group).once('value')
+                        .then((snapshot) => { return Object.assign(Object.assign({}, snapshot.val()), { id: snapshot.key }); });
+                })));
                 console.log(user);
             }
         }));
-        return user;
+        res.send(user);
     }
     catch (error) {
         // Handle Errors here.

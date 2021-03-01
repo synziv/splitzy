@@ -1,10 +1,10 @@
 import React from 'react';
-import OwingUserForList from './owingUserForList';
+import OwingUserForList from './OwingUserForList';
 import { List } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 import { State } from '../../redux/reducers';
 
-const generateUserInGroup = (connectedUser: string) =>{
+const GenerateUserInGroup = (connectedUser: string) =>{
     const userInGroup = useSelector((state:State)=>state.userInGroup.values);
     if(userInGroup && userInGroup.length > 0){
         const connectedUserTemp = userInGroup.find(user => user.id == connectedUser);
@@ -28,9 +28,9 @@ const TotalPrice = () => {
     return (
         <List dense>
             <h1>Alexis</h1>
-            {generateUserInGroup('-MS3Vc-PX4CZzmfVi9hO')}
+            {GenerateUserInGroup('-MS3Vc-PX4CZzmfVi9hO')}
             <h1>Beatrice</h1>
-            {generateUserInGroup('-MS3VYXs7TTA5oSadrcA')}
+            {GenerateUserInGroup('-MS3VYXs7TTA5oSadrcA')}
         </List>
     )
 } 

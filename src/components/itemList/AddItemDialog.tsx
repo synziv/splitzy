@@ -7,7 +7,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { Select, List } from '@material-ui/core';
-import UserForList from './userForList';
+import UserForList from './UserForList';
 import { addItem } from '../../redux/actions/items.actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { State } from '../../redux/reducers';

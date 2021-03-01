@@ -9,7 +9,7 @@ import { database } from '../utils/firebase';
     user.owingArr.forEach(x=> x.owing =0);
   });
 }*/
-const fetchUserGroups = async (userId: string)=>{
+export const fetchUserGroups = async (userId: string)=>{
   const usersInGroup :any[] =[];
   // await database.ref('/users/').orderByChild('groups').equalTo('value').then((snapshot)=>snapshot.val().users);
   const usersIdList = await database.ref('/groups/').once('value').then((snapshot)=>snapshot.val().users);
@@ -20,7 +20,7 @@ const fetchUserGroups = async (userId: string)=>{
   }
   return usersInGroup;
 }
-const createGroup= async(data:any)=>{
+export const createGroup= async(data:any)=>{
     const key = database.ref('/groups').push({
         name: data.name,
         users: [data.user]

@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 import { getUsersInGroup } from "./user.actions";
 import { IItem } from "../../entity/item";
 const axios = require('axios').default;
-export const getItems = ()=>{
+export const getItems = (groupId: string)=>{
     
     const request = () => ({ type: itemsConstants.GET_ITEMS_REQUEST });
     const success = (items: any) => {
@@ -23,14 +23,17 @@ export const getItems = ()=>{
 
     return async (dispatch: any) => {
         dispatch(request());
-        const res = await fetch(requestURL);
-        return res.json()
-            .then(res => {
-                dispatch(success(res));
-            })
-            .catch((res) =>{ 
-                dispatch(failure(res))
-            });
+        await axios.get(requestURL, {
+            params:{
+                groupId: groupId
+            }
+        })
+        .then((res: any) => {
+            dispatch(success(res));
+        })
+        .catch((res: any) => {
+            dispatch(failure(res))
+        });
     }
 }
 export const addItem =(item: IItem) =>{
@@ -57,7 +60,7 @@ export const addItem =(item: IItem) =>{
             .then((res: any) => {
                 dispatch(success(res));
                 dispatch(getUsersInGroup());
-                dispatch(getItems());
+                //dispatch(getItems());
             })
             .catch((res: any) =>{ 
                 dispatch(failure(res))
@@ -94,7 +97,7 @@ export const deleteItem =(id: string) =>{
             .then((res: any) => {
                 dispatch(success(res));
                 dispatch(getUsersInGroup());
-                dispatch(getItems());
+                //dispatch(getItems());
             })
             .catch((res: any) =>{ 
                 dispatch(failure(res))

@@ -1,9 +1,9 @@
-import ItemList from "../components/itemList/itemList"
-import Login from "./auth/login"
-import { useAuth } from "../components/auth/authProvider"
+import ItemList from "./itemList/ItemList"
+import Login from "./auth/Login"
+import { useAuth } from "./auth/AuthProvider"
 // /pages/authenticated.tsx
 import React from 'react';
-import GroupList from "./groupList/groupList";
+import GroupList from "./groupList/GroupList";
 import { firebaseInstance } from "../utils/firebase";
 import { State } from "../redux/reducers";
 import { useSelector, useDispatch } from 'react-redux';

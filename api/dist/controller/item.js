@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.dbItems = void 0;
+exports.fetchItems = exports.deleteItem = exports.addItem = exports.dbItems = void 0;
 const item_1 = require("../entity/item");
 const firebase_1 = require("../utils/firebase");
 const lodash_1 = require("lodash");
@@ -83,6 +83,7 @@ const addItem = (data) => __awaiter(void 0, void 0, void 0, function* () {
     // database.ref('/groups/'+'-MS3W5LMXAwk9nqRl0Dc').update({users:['-MS3VYXs7TTA5oSadrcA','-MS3Vc-PX4CZzmfVi9hO']});
     // generateOwingArr('-MS3W5LMXAwk9nqRl0Dc');
 });
+exports.addItem = addItem;
 const splitTotal = (item, mode) => __awaiter(void 0, void 0, void 0, function* () {
     const usersInGroup = yield firebase_1.database.ref('/groups/' + item.groupId).once('value').then((snapshot) => snapshot.val().users);
     const groupCount = item.splitMode == 'all' ? usersInGroup.length : item.splitWith.length;
@@ -139,9 +140,11 @@ const deleteItem = (id) => __awaiter(void 0, void 0, void 0, function* () {
     splitTotal(deletedItem, 'delete');
     yield firebase_1.database.ref('/items/' + id).set(null);
 });
-const fetchItems = (groupId) => __awaiter(void 0, void 0, void 0, function* () {
+exports.deleteItem = deleteItem;
+const fetchItems = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(req.body);
     let items = [];
-    yield firebase_1.database.ref('/items/').orderByChild('groupId').equalTo(groupId).on('value', (snapshot) => {
+    yield firebase_1.database.ref('/items/').orderByChild('groupId').equalTo(req.body.groupId).on('value', (snapshot) => {
         if (snapshot.val()) {
             const keys = lodash_1.toArray(Object.keys(snapshot.val()));
             items = [...lodash_1.toArray(snapshot.val())];
@@ -150,34 +153,7 @@ const fetchItems = (groupId) => __awaiter(void 0, void 0, void 0, function* () {
             });
         }
     });
-    return items;
+    res.send(items);
 });
-function handler(req, res) {
-    return __awaiter(this, void 0, void 0, function* () {
-        switch (req.method) {
-            case 'POST': {
-                yield addItem(req.body);
-                res.statusCode = 200;
-                res.end();
-                break;
-            }
-            case 'GET': {
-                const fetchedItems = yield fetchItems('-MS3W5LMXAwk9nqRl0Dc');
-                res.statusCode = 200;
-                res.setHeader('Content-Type', 'application/json');
-                res.end(JSON.stringify(fetchedItems));
-                break;
-            }
-            case 'DELETE': {
-                console.log('delete req');
-                console.log(req.body);
-                yield deleteItem(req.body.id);
-                res.statusCode = 200;
-                res.end();
-                break;
-            }
-        }
-    });
-}
-exports.default = handler;
+exports.fetchItems = fetchItems;
 //# sourceMappingURL=item.js.map

@@ -1,7 +1,9 @@
 import React from 'react';
 import {ListItem, ListItemText, ListItemSecondaryAction, Checkbox, IconButton, ListItemAvatar, Avatar} from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
+import { useHistory } from "react-router-dom";
 import { IGroup } from '../../entity/group';
+import { group } from 'console';
 
 interface IGroupProps {
     group: IGroup;
@@ -10,6 +12,7 @@ interface IGroupProps {
 
 const GroupForList = (props: IGroupProps) => {
     const dispatch = useDispatch();
+    const history = useHistory();
     const handleDeleteItem =()=>{
         //dispatch(deleteItem(props.item.id));
     }
@@ -25,9 +28,13 @@ const GroupForList = (props: IGroupProps) => {
         }
         return null
     }*/
+    const groupClicked=()=>{
+        console.log(props.group.id);
+        history.push(`/items/${props.group.id}`);
+    }
     if(props.group)
         return (
-            <ListItem key={props.index} button>
+            <ListItem key={props.index} button onClick={groupClicked}>
                 <ListItemText primary={props.group.name} />
                 {/*deleteIcon()*/}
             </ListItem>

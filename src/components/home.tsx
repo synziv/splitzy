@@ -16,17 +16,17 @@ const Home =()=>{
     const userCookie = useAuth();
     const connectedUser: IConnectedUserState = useSelector((state:State)=> state.connectedUser);
     const loggedIn = ()=>{
-        if(userCookie.user){
+        if(connectedUser.value.id!=""){
             console.log(userCookie.user);
             console.log(connectedUser)
             console.log(isEmpty(connectedUser.value));
-            if(isEmpty(connectedUser.value) && connectedUser.requestState!='requesting'){
+            /*if(isEmpty(connectedUser.value) && connectedUser.requestState!='requesting'){
                 if(firebaseInstance.auth().currentUser == null)
                     firebaseInstance.auth().signOut();
                 userCookie.user.getIdToken().then((token)=>{
                     dispatch(getConnectedUser(token));
                 });
-            }
+            }*/
             return(
                 <GroupList/>
             )

@@ -10,7 +10,7 @@ const AuthContext = createContext<{ user: firebase.User | null }>({
 function AuthProvider({ children }: any) {
    const [user, setUser] = useState<firebase.User | null>(null);
 
-  useEffect(() => {
+  /*useEffect(() => {
     return firebase.auth().onIdTokenChanged((firebaseUser) => {
       console.log('*************connected user');
       console.log('*************firebase user');
@@ -25,7 +25,7 @@ function AuthProvider({ children }: any) {
         });
       }
     });
-  }, []);
+  }, []);*/
 
    // force refresh the token every 10 minutes
    useEffect(() => {

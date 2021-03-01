@@ -8,10 +8,11 @@ import { login } from '../../redux/actions/auth.actions';
 const Login = () => {
     const dispatch = useDispatch();
     const provider = new firebaseInstance.auth.FacebookAuthProvider();
+    
     const facebookAuth = () => {
         firebaseInstance.auth().signInWithRedirect(provider);
-        
     }
+
     firebaseInstance.auth()
                 .getRedirectResult()
                 .then((result) => {

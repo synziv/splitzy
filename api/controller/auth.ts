@@ -1,65 +1,53 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import { firebaseInstance } from "../../utils/firebase";
-import { database } from "../../utils/firebase";
-import { User } from "./entity/user";
+import { firebaseInstance } from "../utils/firebase";
+import { database } from "../utils/firebase";
+import firebase from "firebase";
+import { IUser, User } from "../entity/user";
 import {toArray} from 'lodash';
+import express from "express";
 
-const createUser = async (user)=>{
-   const newUser = new User({
-     name: user.name,
-     email: user.email
-   })
+export const createUser = async (user: IUser) => {
+  const newUser = new User({
+    name: user.name,
+    email: user.email
+  })
   const key = await database.ref('/users').push(newUser).key;
-  return {...newUser, id: key};
+  return { ...newUser, id: key };
 }
 
-const facebookAuth = async (credential) => {
-  // Sign in with the credential from the Facebook user.
-  let user=null
-  const credentialJson = firebaseInstance.auth.AuthCredential.fromJSON(credential);
-  await firebaseInstance.auth().signInWithCredential(credentialJson)
-    .then(async (result) => {
-      // Signed in       
-      const appUser = await database.ref('/users').orderByChild('email').equalTo(result.user.email).once('value').then((snapshot)=>snapshot.val());
-      if(appUser == null){
-        user = await createUser({
-          name: result.user.displayName,
-          email: result.user.email
-        });
-      }
-      else{
-        const key = Object.keys(appUser)
-        user= {...toArray(appUser)[0], id: key[0]};
-        user.groups =await Promise.all(user.groups.map(async (group)=> await database.ref('/groups/' + group).once('value').then((snapshot) => snapshot.val())))
-        console.log(user);
-      }
-    })
-    .catch((error) => {
-      // Handle Errors here.
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      // The email of the user's account used.
-      var email = error.email;
-      // The firebase.auth.AuthCredential type that was used.
-      var credential = error.credential;
-      // ...
-      console.log(errorMessage);
-      console.log(email);
-      console.log(errorCode);
-      console.log(credential);
-    });
-    return user;
-
-}
-
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    switch(req.method){
-      case 'GET':{
-        const user = await facebookAuth(req.query.credential);
-        res.statusCode = 200
-        res.setHeader('Content-Type', 'application/json');
-        res.end(JSON.stringify(user))
-        break;
-      }
-    }
+export const facebookAuth = async (req: express.Request, res: express.Response) => {
+  try {
+    // Sign in with the credential from the Facebook user.
+    let user = null
+    const credentialJson: firebase.auth.OAuthCredential = firebaseInstance.auth.AuthCredential.fromJSON(req.body.credential);
+    await firebaseInstance.auth().signInWithCredential(credentialJson)
+      .then(async (result: any) => {
+        // Signed in
+        const appUser = await database.ref('/users').orderByChild('email').equalTo(result.user.email).once('value').then((snapshot) => snapshot.val());
+        console.log(appUser);
+        if (appUser == null) {
+          user = await createUser({
+            name: result.user.displayName,
+            email: result.user.email
+          });
+        }
+        else {
+          const key = Object.keys(appUser)
+          user = { ...toArray(appUser)[0], id: key[0] };
+          user.groups = await Promise.all(user.groups.map(async (group: any) => await database.ref('/groups/' + group).once('value').then((snapshot) => snapshot.val())))
+          console.log(user);
+        }
+      });
+    res.send(user);
+  }
+  catch (error) {
+    // Handle Errors here.
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    // The email of the user's account used.
+    const email = error.email;
+    // The firebase.auth.AuthCredential type that was used.
+    const credential = error.credential;
+    // ...
+    console.log(errorMessage);
+  }
 }

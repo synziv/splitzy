@@ -1,10 +1,10 @@
 #!/usr/bin/env node
-
+/* tslint:disable */
 /**
  * Module dependencies.
  */
 
-var app = require('../app');
+var app = require('../app.ts');
 var debug = require('debug')('api:server');
 var http = require('http');
 

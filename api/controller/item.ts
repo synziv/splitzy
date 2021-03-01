@@ -1,7 +1,8 @@
-import { NextApiRequest, NextApiResponse } from "next"
-import { IItem, Item } from "./entity/item";
-import { database } from "../../utils/firebase";
+import { IItem, Item } from "../entity/item";
+import { database } from "../utils/firebase";
 import {toArray} from 'lodash';
+import express from "express";
+import { User } from "../entity/user";
 
 export let dbItems: IItem[] = [
     /*{
@@ -23,16 +24,16 @@ export let dbItems: IItem[] = [
         groupId: 1
       },*/
   ]
-      
-      
-  const generateOwingArr = async (groupId: string)=>{
-    //find the group with the id
+
+
+  /*const generateOwingArr = async (groupId: string)=>{
+    // find the group with the id
     const connectedUser = '-MS3VYXs7TTA5oSadrcA';
     const usersInGroup =  await database.ref('/groups/'+ groupId).once('value').then((snapshot)=>snapshot.val().users);
-    usersInGroup.forEach(async (userId)=>{
+    usersInGroup.forEach(async (userId:string)=>{
       if(userId != connectedUser){
-        let modifiedUser=null;
-        //add the iterated user to the connected user owing array
+        let modifiedUser;
+        // add the iterated user to the connected user owing array
         await database.ref('/users/'+ connectedUser).once('value').then(snapshot=>{
           modifiedUser = snapshot.val();
           if(modifiedUser.owingArr){
@@ -48,31 +49,12 @@ export let dbItems: IItem[] = [
             }]
           }
         });
-        database.ref('/users/'+connectedUser).update({owingArr:modifiedUser.owingArr});
+        if(modifiedUser)
+          database.ref('/users/'+connectedUser).update({owingArr:modifiedUser.owingArr});
 
-        modifiedUser = null;
-        //add the connected user to the iterated user owing array
-        await database.ref('/users/'+ userId).once('value').then(snapshot=>{
-          modifiedUser = snapshot.val();
-          if(modifiedUser.owingArr){
-            modifiedUser.owingArr.push({
-              user: connectedUser,
-              owing: 0
-            })
-          }
-          else{
-            modifiedUser.owingArr = [{
-              user: connectedUser,
-              owing: 0
-            }]
-          }
-          
-        });
-        database.ref('/users/'+userId).update({owingArr:modifiedUser.owingArr});
       }
-      
     });
-    //populate the owing array
+    // populate the owing array
     /*usersGroup.usersIds.forEach(userId =>{
         //adds every user to owingArr of the instance user
         if(userId != this.id ){
@@ -85,28 +67,28 @@ export let dbItems: IItem[] = [
                 owing:0
             });
         }
-    });*/
-  }
-  const addItem=async (data)=>{
+    });
+  }*/
+  const addItem=async (data:any)=>{
     const newItem = new Item(data);
     database.ref('/items').push(newItem);
     await splitTotal(newItem, 'add');
-    //database.ref('/groups/'+'-MS3W5LMXAwk9nqRl0Dc').update({users:['-MS3VYXs7TTA5oSadrcA','-MS3Vc-PX4CZzmfVi9hO']});
-    //generateOwingArr('-MS3W5LMXAwk9nqRl0Dc');
+    // database.ref('/groups/'+'-MS3W5LMXAwk9nqRl0Dc').update({users:['-MS3VYXs7TTA5oSadrcA','-MS3Vc-PX4CZzmfVi9hO']});
+    // generateOwingArr('-MS3W5LMXAwk9nqRl0Dc');
   }
-  const splitTotal = async (item: IItem, mode: string)=>{
+  const splitTotal = async (item: Item, mode: string)=>{
     const usersInGroup =  await database.ref('/groups/'+ item.groupId).once('value').then((snapshot)=>snapshot.val().users);
     const groupCount = item.splitMode=='all' ? usersInGroup.length : item.splitWith.length;
-    //split evenly between memebers of the group
+    // split evenly between memebers of the group
     switch (item.splitMode) {
       case 'all': {
-        //search in the db the user associated with the userId iterated from the group
-          //if the user in question is not the buyer of the item
-          //then find in his owingArr the user who bought the item and add a debt associated with him
+        // search in the db the user associated with the userId iterated from the group
+          // if the user in question is not the buyer of the item
+          // then find in his owingArr the user who bought the item and add a debt associated with him
         for(const userId of item.splitWith){
           if (userId != item.user) {
-            let tempUser = await database.ref('/users/'+ userId).once('value').then((snapshot)=>snapshot.val());
-            const tempOwing = tempUser.owingArr.find(x => x.user == item.user);
+            const tempUser = await database.ref('/users/'+ userId).once('value').then((snapshot)=>snapshot.val());
+            const tempOwing = tempUser.owingArr.find((x:any) => x.user == item.user);
             if (mode == 'add')
               tempOwing.owing += item.total / groupCount;
             else
@@ -114,40 +96,38 @@ export let dbItems: IItem[] = [
             await database.ref('/users/'+userId).update({owingArr:tempUser.owingArr});
           }
         }
-          
+
         break;
       }
       case 'even': {
         for(const userId of item.splitWith){
-          //search in the db the user associated with the userId iterated from the group
-          //if the user in question is not the buyer of the item
-          //then find in his owingArr the user who bought the item and add a debt associated with him
-          let owingArr = usersInGroup.find(user => user.id == userId).
-            owingArr.find(x => x.user == item.user);
+          // search in the db the user associated with the userId iterated from the group
+          // if the user in question is not the buyer of the item
+          // then find in his owingArr the user who bought the item and add a debt associated with him
+          const owingArr = usersInGroup.find((user: User) => user.id == userId).
+            owingArr.find((x:any) => x.user == item.user);
           owingArr.owing += item.total / (groupCount + 1);
 
-          await database.ref('/users/'+userId).update({owingArr:owingArr});
+          await database.ref('/users/'+userId).update({owingArr});
         };
         break;
       }
       default:{
         for(const userId of item.splitWith) {
           if (userId != item.user) {
-            let tempUser = await database.ref('/users/'+ userId).once('value').then((snapshot)=>snapshot.val());
-            const tempOwing = tempUser.owingArr.find(x => x.user == item.user);
+            const tempUser = await database.ref('/users/'+ userId).once('value').then((snapshot)=>snapshot.val());
+            const tempOwing = tempUser.owingArr.find((x:any) => x.user == item.user);
             if (mode == 'add')
               tempOwing.owing += (item.total * Number(item.splitMode)) / groupCount;
             else
               tempOwing.owing -= (item.total * Number(item.splitMode)) / groupCount;
-            
+
               await database.ref('/users/'+userId).update({owingArr:tempUser.owingArr});
           }
         }
         break;
       }
     }
-    //update users
-    usersInGroup
   }
   const deleteItem=async (id:string)=>{
     const deletedItem = await database.ref('/items/'+id).once('value').then((snapshot)=>snapshot.val());
@@ -155,7 +135,7 @@ export let dbItems: IItem[] = [
     await database.ref('/items/'+id).set(null);
   }
   const fetchItems =async (groupId: string)=>{
-    let items =[]; 
+    let items:any[] =[];
     await database.ref('/items/').orderByChild('groupId').equalTo(groupId).on('value', (snapshot)=>{
       if (snapshot.val()) {
         const keys = toArray(Object.keys(snapshot.val()));
@@ -170,7 +150,7 @@ export let dbItems: IItem[] = [
     });
     return items
   }
-  export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  export default async function handler(req: express.Request, res: express.Response) {
     switch(req.method){
       case 'POST':{
         await addItem(req.body);
@@ -188,11 +168,11 @@ export let dbItems: IItem[] = [
       case 'DELETE':{
         console.log('delete req')
         console.log(req.body);
-        await deleteItem(req.body.id); 
+        await deleteItem(req.body.id);
         res.statusCode = 200;
         res.end();
         break;
-      }   
+      }
     }
 
   }

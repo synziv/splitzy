@@ -3,14 +3,16 @@ export type IUser={
     total?: number;
     email: string;
     color?: string;
-    groupId?: number;
+    groupId?: string;
+    id?: string;
 }
 export class User implements IUser{
     name='';
     total=0;
-    groupId=null;
+    groupId;
     email = '';
     color = '';
+    id;
 
     constructor(data:IUser){
         this.name = data.name;
@@ -18,5 +20,6 @@ export class User implements IUser{
         this.color = data.color || '';
         this.groupId = data.groupId || '';
         this.email = data.email;
+        this.id = data.id;
     }
 }

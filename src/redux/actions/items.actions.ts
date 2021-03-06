@@ -28,8 +28,10 @@ export const getItems = (groupId: string)=>{
                 groupId: groupId
             }
         })
-        .then((res: any) => {
-            dispatch(success(res));
+        .then((res:any) => {
+            console.log('******************')
+            console.log(res);
+            dispatch(success(res.data));
         })
         .catch((res: any) => {
             dispatch(failure(res))
@@ -58,9 +60,10 @@ export const addItem =(item: IItem) =>{
         dispatch(request());
         return await axios.post(requestURL, item)
             .then((res: any) => {
+                console.log(res);
                 dispatch(success(res));
                 dispatch(getUsersInGroup());
-                //dispatch(getItems());
+                dispatch(getItems(item.groupId));
             })
             .catch((res: any) =>{ 
                 dispatch(failure(res))

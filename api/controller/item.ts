@@ -69,12 +69,22 @@ export let dbItems: IItem[] = [
         }
     });
   }*/
-  export const addItem=async (data:any)=>{
-    const newItem = new Item(data);
-    database.ref('/items').push(newItem);
-    await splitTotal(newItem, 'add');
-    // database.ref('/groups/'+'-MS3W5LMXAwk9nqRl0Dc').update({users:['-MS3VYXs7TTA5oSadrcA','-MS3Vc-PX4CZzmfVi9hO']});
-    // generateOwingArr('-MS3W5LMXAwk9nqRl0Dc');
+  export const addItem=async (req: express.Request, res: express.Response)=>{
+    try{
+      const newItem = new Item(req.body);
+      console.log(newItem);
+      database.ref('/items').push(newItem);
+      await splitTotal(newItem, 'add');
+      // database.ref('/groups/'+'-MS3W5LMXAwk9nqRl0Dc').update({users:['-MS3VYXs7TTA5oSadrcA','-MS3Vc-PX4CZzmfVi9hO']});
+      // generateOwingArr('-MS3W5LMXAwk9nqRl0Dc');
+      res.status(200);
+      res.send();
+    }
+    catch(error){
+      res.statusCode=500;
+      res.end();
+    }
+
   }
   const splitTotal = async (item: Item, mode: string)=>{
     const usersInGroup =  await database.ref('/groups/'+ item.groupId).once('value').then((snapshot)=>snapshot.val().users);
@@ -130,14 +140,21 @@ export let dbItems: IItem[] = [
     }
   }
   export const deleteItem=async (id:string)=>{
-    const deletedItem = await database.ref('/items/'+id).once('value').then((snapshot)=>snapshot.val());
-    splitTotal(deletedItem, 'delete');
-    await database.ref('/items/'+id).set(null);
+    try{
+      const deletedItem = await database.ref('/items/'+id).once('value').then((snapshot)=>snapshot.val());
+      splitTotal(deletedItem, 'delete');
+      await database.ref('/items/'+id).set(null);
+    }
+    catch(error){
+      console.log(error);
+    }
+
   }
 
   export const fetchItems =async (req: express.Request, res: express.Response)=>{
     try{
       const groupdId: string = req.query.groupId.toString();
+      console.log(groupdId);
       let items:any[] =[];
       await database.ref('/items/').orderByChild('groupId').equalTo(groupdId).on('value', (snapshot) => {
         if (snapshot.val()) {
@@ -158,5 +175,5 @@ export let dbItems: IItem[] = [
       res.status(500);
       res.send();
     }
-    
+
   }

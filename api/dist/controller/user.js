@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.getConnectedUser = exports.fetchUsersInGroup = void 0;
 const firebase_1 = require("../utils/firebase");
 const firebaseAdmin_1 = require("../utils/firebaseAdmin");
 const lodash_1 = require("lodash");
@@ -29,6 +30,7 @@ const fetchUsersInGroup = (groupId) => __awaiter(void 0, void 0, void 0, functio
     }
     return usersInGroup;
 });
+exports.fetchUsersInGroup = fetchUsersInGroup;
 const getConnectedUser = (tokenId) => __awaiter(void 0, void 0, void 0, function* () {
     let connectedUser;
     yield firebaseAdmin_1.firebaseAdminInstanceApp.auth()
@@ -56,32 +58,5 @@ const getConnectedUser = (tokenId) => __awaiter(void 0, void 0, void 0, function
     });
     return connectedUser;
 });
-function handler(req, res) {
-    return __awaiter(this, void 0, void 0, function* () {
-        switch (req.method) {
-            case 'GET': {
-                if (req.query.method == 'getConnectedUser') {
-                    try {
-                        const connectedUser = yield getConnectedUser(req.query.tokenId);
-                        res.statusCode = 200;
-                        res.setHeader('Content-Type', 'application/json');
-                        res.end(JSON.stringify(connectedUser));
-                    }
-                    catch (_a) {
-                        res.statusCode = 403;
-                        res.end();
-                    }
-                }
-                else {
-                    const userInGroup = yield fetchUsersInGroup('-MS3W5LMXAwk9nqRl0Dc');
-                    res.statusCode = 200;
-                    res.setHeader('Content-Type', 'application/json');
-                    res.end(JSON.stringify(userInGroup));
-                }
-                break;
-            }
-        }
-    });
-}
-exports.default = handler;
+exports.getConnectedUser = getConnectedUser;
 //# sourceMappingURL=user.js.map

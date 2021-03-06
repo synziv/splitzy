@@ -22,7 +22,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.firebaseAdminInstanceApp = void 0;
 const firebaseAdmin = __importStar(require("firebase-admin"));
 /* tslint:disable-next-line:no-var-requires */
-const serviceAccount = require("../splitzy-4baa3-firebase-adminsdk-izqht-eaf0843347.json");
+// const serviceAccount = require("../splitzy-4baa3-firebase-adminsdk-izqht-eaf0843347.json");
 if (!firebaseAdmin.apps.length)
     firebaseAdmin.initializeApp({
         credential: firebaseAdmin.credential.applicationDefault(),

@@ -10,7 +10,7 @@ class Item {
         this.total = data.total;
         this.user = data.user;
         this.splitMode = data.splitMode;
-        this.groupId = '-MS3W5LMXAwk9nqRl0Dc'; // data.groupId;
+        this.groupId = data.groupId;
         this.splitWith = data.splitWith;
     }
 }

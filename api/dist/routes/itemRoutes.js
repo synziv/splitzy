@@ -23,9 +23,9 @@ const express = __importStar(require("express"));
 const controller = __importStar(require("../controller/item"));
 const router = express.Router();
 // Routes
-router.post('/item', controller.addItem);
-router.get('/item', controller.fetchItems);
-router.delete('/item', controller.deleteItem);
+router.post('/', controller.addItem);
+router.get('/', controller.fetchItems);
+router.delete('/', controller.deleteItem);
 router.get('/x', (req, res) => { res.send('auth routes'); });
 exports.default = router;
 //# sourceMappingURL=itemRoutes.js.map

@@ -17,6 +17,7 @@ import { IUserInGroup } from '../../redux/reducers/userInGroup.reducer';
 interface IAddItemDialogProps{
   open : boolean;
   handleClose: ()=>void;
+  groupdId: string;
 }
 
 export default function AddItemDialog(props: IAddItemDialogProps) {
@@ -66,6 +67,7 @@ export default function AddItemDialog(props: IAddItemDialogProps) {
     const splitModeToSave = splitMode == 'all' ? splitMode : customSplitMode;
     const groupId = 1;
     //name, total, userId, splitModeToSave, splitWith,
+    console.log(props);
     dispatch(addItem({
       name: name,
       id: '',
@@ -73,7 +75,7 @@ export default function AddItemDialog(props: IAddItemDialogProps) {
       splitMode: splitModeToSave,
       splitWith: splitModeToSave =='all'? generateSplitWith() : splitWith,
       user: connectedUser.id,
-      groupId: '-MS3W5LMXAwk9nqRl0Dc'
+      groupId: props.groupdId
     }));
     close();
   }

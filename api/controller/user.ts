@@ -11,7 +11,7 @@ import express from 'express';
     user.owingArr.forEach(x=> x.owing =0);
   });
 }*/
-const fetchUsersInGroup = async (groupId: string)=>{
+export const fetchUsersInGroup = async (groupId: string)=>{
   const usersInGroup:any[] =[];
   // await database.ref('/users/').orderByChild('groups').equalTo('value').then((snapshot)=>snapshot.val().users);
   const usersIds = await database.ref('/groups/'+ groupId).once('value').then((snapshot)=>snapshot.val().users);
@@ -23,7 +23,7 @@ const fetchUsersInGroup = async (groupId: string)=>{
   return usersInGroup;
 }
 
-const getConnectedUser = async(tokenId:any)=>{
+export const getConnectedUser = async(tokenId:any)=>{
   let connectedUser;
   await firebaseAdminInstanceApp.auth()
     .verifyIdToken(tokenId)
@@ -50,32 +50,4 @@ const getConnectedUser = async(tokenId:any)=>{
     throw new Error('Error for fetching user');
   });
   return connectedUser;
-}
-export default async function handler(req: express.Request, res: express.Response) {
-  switch(req.method){
-    case 'GET': {
-      if (req.query.method == 'getConnectedUser') {
-        try {
-          const connectedUser = await getConnectedUser(req.query.tokenId);
-          res.statusCode = 200
-          res.setHeader('Content-Type', 'application/json')
-          res.end(JSON.stringify(connectedUser))
-        }
-        catch{
-          res.statusCode = 403
-          res.end();
-        }
-
-      }
-      else{
-        const userInGroup = await fetchUsersInGroup('-MS3W5LMXAwk9nqRl0Dc');
-        res.statusCode = 200
-        res.setHeader('Content-Type', 'application/json')
-        res.end(JSON.stringify(userInGroup))
-      }
-
-      break;
-    }
-  }
-
 }

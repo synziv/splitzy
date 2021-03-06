@@ -15,15 +15,14 @@ import { IGroup } from '../../entity/group';
 
 const ItemList = ()=> {
     const dispatch = useDispatch();
-    const location = useLocation();
     const match = useRouteMatch<{id:string}>();
     const itemList = useSelector((state:State)=>state.items.values);
     const [open, setOpen] = React.useState(false);
-    console.log(match.params);
     useEffect(() => {
         dispatch(getUsersInGroup());
         dispatch(getItems(match.params.id));
     }, []);
+
     const generateItem = () => {
         if(itemList)
             return itemList.map((item, index) => {
@@ -60,7 +59,7 @@ const ItemList = ()=> {
             <Fab color="primary" aria-label="add" onClick={addItem}>
                 <Add />
             </Fab>
-            <AddItemDialog open={open} handleClose={handleClose}/>
+            <AddItemDialog groupdId={match.params.id} open={open} handleClose={handleClose}/>
             <Button onClick={signOut}>Sign out</Button>
         </div>
         

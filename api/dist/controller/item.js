@@ -76,12 +76,21 @@ exports.dbItems = [
       }
   });
 }*/
-const addItem = (data) => __awaiter(void 0, void 0, void 0, function* () {
-    const newItem = new item_1.Item(data);
-    firebase_1.database.ref('/items').push(newItem);
-    yield splitTotal(newItem, 'add');
-    // database.ref('/groups/'+'-MS3W5LMXAwk9nqRl0Dc').update({users:['-MS3VYXs7TTA5oSadrcA','-MS3Vc-PX4CZzmfVi9hO']});
-    // generateOwingArr('-MS3W5LMXAwk9nqRl0Dc');
+const addItem = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const newItem = new item_1.Item(req.body);
+        console.log(newItem);
+        firebase_1.database.ref('/items').push(newItem);
+        yield splitTotal(newItem, 'add');
+        // database.ref('/groups/'+'-MS3W5LMXAwk9nqRl0Dc').update({users:['-MS3VYXs7TTA5oSadrcA','-MS3Vc-PX4CZzmfVi9hO']});
+        // generateOwingArr('-MS3W5LMXAwk9nqRl0Dc');
+        res.status(200);
+        res.send();
+    }
+    catch (error) {
+        res.statusCode = 500;
+        res.end();
+    }
 });
 exports.addItem = addItem;
 const splitTotal = (item, mode) => __awaiter(void 0, void 0, void 0, function* () {
@@ -136,24 +145,37 @@ const splitTotal = (item, mode) => __awaiter(void 0, void 0, void 0, function* (
     }
 });
 const deleteItem = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const deletedItem = yield firebase_1.database.ref('/items/' + id).once('value').then((snapshot) => snapshot.val());
-    splitTotal(deletedItem, 'delete');
-    yield firebase_1.database.ref('/items/' + id).set(null);
+    try {
+        const deletedItem = yield firebase_1.database.ref('/items/' + id).once('value').then((snapshot) => snapshot.val());
+        splitTotal(deletedItem, 'delete');
+        yield firebase_1.database.ref('/items/' + id).set(null);
+    }
+    catch (error) {
+        console.log(error);
+    }
 });
 exports.deleteItem = deleteItem;
 const fetchItems = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(req.body);
-    let items = [];
-    yield firebase_1.database.ref('/items/').orderByChild('groupId').equalTo(req.body.groupId).on('value', (snapshot) => {
-        if (snapshot.val()) {
-            const keys = lodash_1.toArray(Object.keys(snapshot.val()));
-            items = [...lodash_1.toArray(snapshot.val())];
-            items = items.map((item, index) => {
-                return Object.assign(Object.assign({}, item), { id: keys[index] });
-            });
-        }
-    });
-    res.send(items);
+    try {
+        const groupdId = req.query.groupId.toString();
+        console.log(groupdId);
+        let items = [];
+        yield firebase_1.database.ref('/items/').orderByChild('groupId').equalTo(groupdId).on('value', (snapshot) => {
+            if (snapshot.val()) {
+                const keys = lodash_1.toArray(Object.keys(snapshot.val()));
+                items = [...lodash_1.toArray(snapshot.val())];
+                items = items.map((item, index) => {
+                    return Object.assign(Object.assign({}, item), { id: keys[index] });
+                });
+            }
+        });
+        console.log(items);
+        res.send(items);
+    }
+    catch (error) {
+        res.status(500);
+        res.send();
+    }
 });
 exports.fetchItems = fetchItems;
 //# sourceMappingURL=item.js.map

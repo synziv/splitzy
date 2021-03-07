@@ -11,10 +11,10 @@ import express from 'express';
     user.owingArr.forEach(x=> x.owing =0);
   });
 }*/
-export const fetchUsersInGroup = async (groupId: string)=>{
+export const fetchUsersInGroup = async (req: express.Request, res: express.Response)=>{
   const usersInGroup:any[] =[];
   // await database.ref('/users/').orderByChild('groups').equalTo('value').then((snapshot)=>snapshot.val().users);
-  const usersIds = await database.ref('/groups/'+ groupId).once('value').then((snapshot)=>snapshot.val().users);
+  const usersIds = await database.ref('/groups/'+ req.query.groupId).once('value').then((snapshot)=>snapshot.val().users);
   for (const userId of usersIds){
     await database.ref('/users/'+ userId).once('value').then((snapshot)=>{
       usersInGroup.push({...snapshot.val(), id: userId});

@@ -29,8 +29,6 @@ export const getItems = (groupId: string)=>{
             }
         })
         .then((res:any) => {
-            console.log('******************')
-            console.log(res);
             dispatch(success(res.data));
         })
         .catch((res: any) => {
@@ -60,9 +58,8 @@ export const addItem =(item: IItem) =>{
         dispatch(request());
         return await axios.post(requestURL, item)
             .then((res: any) => {
-                console.log(res);
                 dispatch(success(res));
-                dispatch(getUsersInGroup());
+                dispatch(getUsersInGroup(item.groupId));
                 dispatch(getItems(item.groupId));
             })
             .catch((res: any) =>{ 
@@ -70,7 +67,7 @@ export const addItem =(item: IItem) =>{
             });
     }
 }
-export const deleteItem =(id: string) =>{
+export const deleteItem =(item: IItem) =>{
     const request = () => ({ type: itemsConstants.DELETE_ITEM_REQUEST });
 
     const success = (data: any) => {
@@ -94,12 +91,12 @@ export const deleteItem =(id: string) =>{
             method: 'delete',
             url: requestURL,
             data: {
-                id: id
+                id: item.id
             }
         })
             .then((res: any) => {
                 dispatch(success(res));
-                dispatch(getUsersInGroup());
+                dispatch(getUsersInGroup(item.groupId));
                 //dispatch(getItems());
             })
             .catch((res: any) =>{ 

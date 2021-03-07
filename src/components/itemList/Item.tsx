@@ -17,7 +17,7 @@ const ItemForList = (props: IItemProps) => {
     const user = useSelector((state:State)=>state.userInGroup.values.find(user=> user.id == props.item.user));
     const connectedUser = useSelector((state:State)=>state.connectedUser.value);
     const handleDeleteItem =()=>{
-        dispatch(deleteItem(props.item.id));
+        dispatch(deleteItem(props.item));
     }
     const deleteIcon =()=>{
         if(connectedUser.id == props.item.user){
@@ -31,7 +31,7 @@ const ItemForList = (props: IItemProps) => {
         }
         return null
     }
-    if(user)
+    if(user){
         return (
             <ListItem key={props.index} button>
                 <ListItemAvatar>
@@ -44,6 +44,7 @@ const ItemForList = (props: IItemProps) => {
                 {deleteIcon()}
             </ListItem>
         )
+    }
     return null;
 } 
 

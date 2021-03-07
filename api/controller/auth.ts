@@ -23,7 +23,6 @@ export const facebookAuth = async (req: express.Request, res: express.Response) 
       .then(async (result: any) => {
         // Signed in
         const appUser = await database.ref('/users').orderByChild('email').equalTo(result.user.email).once('value').then((snapshot) => snapshot.val());
-        console.log(appUser);
         if (appUser == null) {
           user = await createUser({
             name: result.user.displayName,
@@ -35,11 +34,10 @@ export const facebookAuth = async (req: express.Request, res: express.Response) 
           user = { ...toArray(appUser)[0], id: key[0] };
           user.groups = await Promise.all(user.groups.map(async (group: any) => await database.ref('/groups/' + group).once('value')
             .then((snapshot) => {return {...snapshot.val(), id: snapshot.key}})))
-          console.log(user);
         }
       });
     res.send(user);
-  }
+  } 
   catch (error) {
     // Handle Errors here.
     const errorCode = error.code;

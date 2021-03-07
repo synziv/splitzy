@@ -4,7 +4,8 @@ import * as controller from '../controller/group';
 const router = express.Router();
 
 // Routes
-router.post('/group', controller.createGroup);
+router.post('/', controller.createGroup);
+router.get('/', controller.fetchUserGroups);
 router.get('/x', (req,res)=>{res.send('auth routes')});
 
 

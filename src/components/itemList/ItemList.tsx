@@ -19,15 +19,18 @@ const ItemList = ()=> {
     const itemList = useSelector((state:State)=>state.items.values);
     const [open, setOpen] = React.useState(false);
     useEffect(() => {
-        dispatch(getUsersInGroup());
+        dispatch(getUsersInGroup(match.params.id));
         dispatch(getItems(match.params.id));
     }, []);
 
     const generateItem = () => {
-        if(itemList)
+        if(itemList){
+            console.log(itemList);
             return itemList.map((item, index) => {
                 return <ItemForList item={item} index={index} />
             })
+        }
+            
     }
     
     

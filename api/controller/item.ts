@@ -81,6 +81,7 @@ export let dbItems: IItem[] = [
       res.send();
     }
     catch(error){
+      console.log(error.message)
       res.statusCode=500;
       res.end();
     }
@@ -154,9 +155,10 @@ export let dbItems: IItem[] = [
   export const fetchItems =async (req: express.Request, res: express.Response)=>{
     try{
       const groupdId: string = req.query.groupId.toString();
+      console.log('fetchItems');
       console.log(groupdId);
       let items:any[] =[];
-      await database.ref('/items/').orderByChild('groupId').equalTo(groupdId).on('value', (snapshot) => {
+      await database.ref('/items/').orderByChild('groupId').equalTo(groupdId).once('value', (snapshot) => {
         if (snapshot.val()) {
           const keys = toArray(Object.keys(snapshot.val()));
           items = [...toArray(snapshot.val())];
@@ -166,14 +168,15 @@ export let dbItems: IItem[] = [
               id: keys[index]
             };
           });
+          res.send(items);
         }
       });
-      console.log(items);
-      res.send(items);
+      
     }
     catch(error){
+      console.log(error.message);
       res.status(500);
-      res.send();
+      res.end();
     }
 
   }

@@ -2,7 +2,7 @@ import { userConstants } from "../constants/user.constants";
 import { firebaseInstance } from "../../utils/firebase";
 const axios = require('axios').default;
 
-export const getUsersInGroup = ()=>{
+export const getUsersInGroup = (groupId: string)=>{
     const request = () => ({ type: userConstants.GET_USERS_IN_GROUP_REQUEST });
 
     const success = (usersInGroup: any) => {
@@ -18,25 +18,27 @@ export const getUsersInGroup = ()=>{
         }
     };
 
-    const requestURL = '/api/user';
+    const requestURL = '/api/group';
 
     return async (dispatch: any) => {
         dispatch(request());
-        const res = await axios.get(requestURL);
-        return res.json()
-            .then((res: any) => {
-                dispatch(success(res));
-            })
-            .catch((res: any) =>{ 
-                dispatch(failure(res))
-            });
+        await axios.get(requestURL, {
+            params:{
+                groupId: groupId
+            }
+        })
+        .then((res: any) => {
+            dispatch(success(res.data));
+        })
+        .catch((res: any) => {
+            dispatch(failure(res))
+        });
     }
 }
 export const getConnectedUser = (tokenId: string)=>{
     const request = () => ({ type: userConstants.GET_CONNECTED_USER_REQUEST });
 
     const success = (res: any) => {
-        console.log(res.data);
         return{
           type: userConstants.GET_CONNECTED_USER_SUCCESS,
           payload: res.data,
